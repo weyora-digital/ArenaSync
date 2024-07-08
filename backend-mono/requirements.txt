@@ -1,0 +1,9 @@
+fastapi==0.78.0
+uvicorn[standard]==0.18.2
+sqlalchemy==1.4.31
+passlib[bcrypt]==1.7.4
+pydantic==1.9.0
+python-jose[cryptography]==3.3.0
+python-multipart==0.0.5
+psycopg2-binary==2.9.3  # If using PostgreSQL, or choose the adapter for your DB
+PyJWT==2.8.0
