@@ -55,7 +55,7 @@ def login_user():
     else:
         return jsonify({'message': 'Invalid username or password'}), 401
 
-@user_blueprint.route('/verify/user', methods=['GET'])
+@user_blueprint.route('/verify', methods=['GET'])
 @jwt_required()
 def verify_user():
     user_id = get_jwt_identity()
