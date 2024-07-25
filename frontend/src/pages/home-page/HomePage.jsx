@@ -1,6 +1,6 @@
 const HomePage = () => {
     return (
-        <div className="flex-grow">
+        <div className="z-10 flex-grow">
             Home Page
         </div>
     );
