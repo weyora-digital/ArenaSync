@@ -15,8 +15,8 @@ const RightArrow = ({ className }) => {
                 <g
                     id="ui-gambling-website-lined-icnos-casinoshunter"
                     transform="translate(-1511.000000, -158.000000)"
-                    fill="#1C1C1F"
                     fillRule="nonzero"
+                    className={className}
                 >
                     <g id="1" transform="translate(1350.000000, 120.000000)">
                         <path

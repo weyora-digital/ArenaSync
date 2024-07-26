@@ -5,6 +5,7 @@ const LeftArrow = ({ className }) => {
             height="800px"
             viewBox="0 -6.5 38 38"
             version="1.1"
+            fill="#1C1C1F"
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
             className={className}
@@ -15,8 +16,8 @@ const LeftArrow = ({ className }) => {
                 <g
                     id="ui-gambling-website-lined-icnos-casinoshunter"
                     transform="translate(-1641.000000, -158.000000)"
-                    fill="#1C1C1F"
                     fillRule="nonzero"
+                    className={className}
                 >
                     <g id="1" transform="translate(1350.000000, 120.000000)">
                         <path

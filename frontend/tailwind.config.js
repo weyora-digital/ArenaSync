@@ -13,9 +13,12 @@ export default {
                 'gradient-radial': 'radial-gradient(circle, rgba(62,43,18,1) 1%, rgba(21,21,21,0) 70%)',
             }),
             colors: {
-                'light-black': '#151515dd',
+                'light-black': '#090909ee',
+                'secondary-dark': '#171717',
                 'inactive-text': '#8b8b8b',
                 'primary-text': '#f5f5f5',
+                secondary: '#F28B02',
+                'hero-back': '#8000FF'
             },
         },
     },
