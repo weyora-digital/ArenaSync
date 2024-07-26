@@ -57,9 +57,9 @@ const Navbar = () => {
                 ))}
             </div>
             <div className="flex items-center justify-end gap-4">
-                <img src={IMAGES.avatar} alt="avatar" className="w-12 h-12" />
+                <img src={IMAGES.avatar} alt="avatar" className="w-12 h-12 rounded-full" />
                 <div className="flex flex-col">
-                    <p>John Doe</p>
+                    <p>Dsingr Yt</p>
                     <p className="text-sm text-inactive-text">Level 15</p>
                 </div>
                 <ICONS.Settings

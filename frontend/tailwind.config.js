@@ -16,9 +16,12 @@ export default {
                 'light-black': '#090909ee',
                 'secondary-dark': '#171717',
                 'inactive-text': '#8b8b8b',
+                'inactive-light': '#c5c5c5',
                 'primary-text': '#f5f5f5',
                 secondary: '#F28B02',
-                'hero-back': '#8000FF'
+                'dark-secondary': '#3e2b12',
+                'hero-back': '#8000FF',
+                'chip-back': '#bdff01',
             },
             letterSpacing: {
                 'subtitle': '3px',

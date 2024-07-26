@@ -21,7 +21,7 @@ function App() {
                 <div className="absolute z-0 rounded-full -left-32 -top-32 h-96 w-96 bg-gradient-radial"></div>
                 <div className="absolute z-0 rounded-full -right-32 -bottom-32 h-96 w-96 bg-gradient-radial"></div>
                 <Navbar />
-                <div className={`overflow-auto w-ful`} style={{ height: pageHeight }}>
+                <div className="relative overflow-auto w-ful" style={{ height: pageHeight }}>
                     <Router />
                     <Footer />
                 </div>
