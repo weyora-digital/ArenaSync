@@ -20,6 +20,9 @@ export default {
                 secondary: '#F28B02',
                 'hero-back': '#8000FF'
             },
+            letterSpacing: {
+                'subtitle': '3px',
+            },
         },
     },
     plugins: [],

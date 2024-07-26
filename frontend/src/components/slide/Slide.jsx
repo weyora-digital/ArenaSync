@@ -18,7 +18,7 @@ const Slide = ({ show }) => {
                 <img
                     src={IMAGES.shooter}
                     alt="shooter"
-                    className="absolute object-cover -top-10 h-[calc(100%+40px)]"
+                    className="absolute object-cover -top-10 h-[calc(100%+38px)]"
                 />
             </div>
         </div>

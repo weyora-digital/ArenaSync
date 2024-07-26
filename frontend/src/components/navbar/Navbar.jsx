@@ -34,7 +34,10 @@ const Navbar = () => {
     };
 
     return (
-        <div className="sticky top-0 z-10 h-[100px] py-4 px-10 items-center border-b-2 border-b-inactive-text grid grid-cols-[0.5fr_1fr_0.5fr]">
+        <nav
+            id="navbar"
+            className="relative w-full top-0 h-[100px] py-4 px-10 items-center border-b-2 border-b-inactive-text grid grid-cols-[0.5fr_1fr_0.5fr]"
+        >
             <img src={ICONS.logo} alt="logo" />
             <div className="flex items-center justify-between uppercase">
                 {items.map((item) => (
@@ -63,7 +66,7 @@ const Navbar = () => {
                     className={`w-8 h-8 ml-5 fill-inactive-text hover:fill-primary-text cursor-pointer`}
                 />
             </div>
-        </div>
+        </nav>
     );
 };
 

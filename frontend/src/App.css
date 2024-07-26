@@ -6,4 +6,21 @@
 
 html {
     font-family: 'Poppins', sans-serif;
+    @apply text-primary-text;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    @apply bg-light-black;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    @apply bg-secondary;
+    border-radius: 10px;
 }

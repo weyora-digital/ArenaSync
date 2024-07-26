@@ -18,8 +18,8 @@ const HomePage = () => {
     }, [currentIndex]);
 
     return (
-        <div className="z-10 flex flex-col flex-grow w-11/12 gap-8 mx-auto mt-10">
-            <div className="relative h-[320px]">
+        <div className="z-10 flex flex-col flex-grow w-11/12 gap-8 mx-auto my-10">
+            <div className="relative h-[320px] overflow-x-clip">
                 <div
                     className="relative flex w-full h-full transition-transform duration-1000 ease-in-out"
                     style={{
@@ -40,7 +40,7 @@ const HomePage = () => {
                 </div>
             </div>
             <div className="">
-                <p className="text-sm uppercase tracking-[3px]">Trending</p>
+                <p className="text-sm uppercase tracking-subtitle">Trending</p>
                 <div className="flex items-end justify-between mt-1 mb-5">
                     <h2 className="text-2xl font-semibold">{`Upcoming Match's`}</h2>
                     <div className="flex gap-5">
