@@ -1,0 +1,23 @@
+.upcoming-challenges {
+    background-color: var(--primary-bg);
+  
+    select {
+      transition: background-color 0.3s ease, color 0.3s ease;
+      border-radius: 4px;
+      
+      &:focus {
+        background-color: #1a202c; /* Focus effect */
+      }
+    }
+  
+    h3 {
+      text-transform: uppercase;
+      letter-spacing: 0.05rem;
+    }
+  
+    a {
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+  }
+  

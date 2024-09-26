@@ -1,0 +1,60 @@
+.header-slider {
+    position: relative;
+    width: 100%;
+    height: 450px; /* Adjust height as needed */
+  
+    .slick-slide {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  
+    .slick-dots {
+      bottom: 20px; /* Adjust dot position */
+    }
+  
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Ensure the image covers the entire area */
+    }
+  
+    .overlay {
+      position: absolute;
+      top: 18%;
+      left: 40px;
+    //   transform: translate(-50%);
+      color: white;
+      text-align: left;
+      z-index: 1;
+      max-width: 470px;
+  
+      h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
+  
+      p {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+      }
+  
+      .btn {
+        padding: 0.65rem 1.5rem;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+  
+        &:hover {
+          background-color: #0056b3;
+        }
+      }
+    }
+  }
+  

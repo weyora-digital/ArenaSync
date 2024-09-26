@@ -1,0 +1,92 @@
+@import '../../styles/variables.scss'; /* Import global variables */
+
+/* Navbar container styles */
+.navbar {
+  background-color: var(--primary-bg);
+  color: var(--primary-text);
+
+  .navbar-top {
+    border-bottom: 1px solid var(--navbar-border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem; /* Adjusted padding for better spacing */
+
+    span {
+      color: var(--secondary-text);
+    }
+
+    a {
+      color: var(--primary-text);
+      margin-right: 10px;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: var(--secondary-text);
+      }
+    }
+
+    .navbar-welcome {
+      color: var(--secondary-text);
+    }
+
+    span {
+      margin-right: 1rem; /* Add some spacing between "Follow Us" and icons */
+    }
+  }
+
+  .navbar-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem; /* Adjust the padding for better spacing */
+
+    .navbar-logo img {
+      max-width: 90px; /* Adjust logo size */
+    }
+
+    .navbar-links {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+
+      li {
+        display: inline-block;
+        a {
+          color: var(--primary-text);
+          text-decoration: none;
+          font-size: 1rem;
+          padding: 0.25rem 0;
+          transition: color 0.3s ease;
+
+          &:hover {
+            color: var(--secondary-text);
+          }
+        }
+      }
+    }
+
+    .navbar-auth {
+      display: flex;
+      gap: 1rem;
+
+      .btn {
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--primary-text);
+        // border-radius: 5px;
+        color: var(--primary-text);
+        background-color: var(--button-bg);
+        transition: background-color 0.3s ease, color 0.3s ease;
+
+        &:hover {
+          background-color: var(--button-hover-bg);
+          color: var(--button-hover-text);
+        }
+      }
+
+      .signup-btn {
+        margin-right: 0.5rem; /* Adjust margin between buttons */
+      }
+    }
+  }
+}

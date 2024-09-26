@@ -1,0 +1,23 @@
+footer {
+    background-color: #1a1a1a;
+  
+    a {
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  
+    .text-gray-300 {
+      color: #d1d5db; /* Lighter gray text */
+    }
+  
+    .text-blue-500 {
+      color: #fefefe; /* Tailwind blue */
+    }
+  
+    .bg-gray-800 {
+      background-color: #2d3748; /* Footer bottom background */
+    }
+  }
+  
