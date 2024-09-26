@@ -74,10 +74,10 @@ function passwordVerify(errors = {}, values){
 
 /** validate username */
 function usernameVerify(error = {}, values){
-    if(!values.username){
-        error.username = toast.error('Username Required...!');
-    }else if(values.username.includes(" ")){
-        error.username = toast.error('Invalid Username...!')
+    if(!values.nickname){
+        error.nickname = toast.error('Nickname Required...!');
+    }else if(values.nickname.includes(" ")){
+        error.nickname = toast.error('Invalid Username...!')
     }
 
     return error;

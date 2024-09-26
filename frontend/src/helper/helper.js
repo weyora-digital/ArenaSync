@@ -37,7 +37,7 @@ export async function getUser({ username }){
 export async function getRecommendation({ username }){
     try {
         console.log(username)
-        const { data } = await axios.get(`http://localhost:5001/api/getRecommendation/${username}`);
+        const { data } = await axios.get(`http://127.0.0.1:5001/api/getRecommendation/${username}`);
         return { data };
     } catch (error) {
         return { error : "Username doesn't Match...!"}
@@ -47,14 +47,14 @@ export async function getRecommendation({ username }){
 /** register user function */
 export async function registerUser(credentials){
     try {
-        const { data : { msg }, status } = await axios.post(`http://localhost:5001/api/register`, credentials);
+        const { data : { msg }, status } = await axios.post(`http://127.0.0.1:5000/user/signup`, credentials);
 
         let { username, email } = credentials;
 
         /** send email */
-        if(status === 201){
-            await axios.post(`http://localhost:5001/api/registerMail`, { username, userEmail : email, text : msg})
-        }
+        // if(status === 201){
+        //     await axios.post(`http://127.0.0.1:5001/api/registerMail`, { username, userEmail : email, text : msg})
+        // }
 
         return Promise.resolve(msg)
     } catch (error) {

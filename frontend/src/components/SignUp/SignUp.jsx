@@ -18,7 +18,7 @@ export default function SignupForm({ isOpen, onClose }) {
   const formik = useFormik({
     initialValues: {
       email: '',
-      username: '',
+      nickname: '',
       password: '',
     },
     validate: registerValidation,
@@ -35,7 +35,7 @@ export default function SignupForm({ isOpen, onClose }) {
       });
 
       registerPromise.then(() => {
-        navigate('/');
+        navigate('/login');
       });
     },
   });
@@ -115,9 +115,9 @@ export default function SignupForm({ isOpen, onClose }) {
             className="w-full p-3 bg-gray-800 text-gray-300 rounded-md"
           />
           <input
-            {...formik.getFieldProps('username')}
+            {...formik.getFieldProps('nickname')}
             type="text"
-            placeholder="Username"
+            placeholder="Nickname"
             className="w-full p-3 bg-gray-800 text-gray-300 rounded-md"
           />
           <input

@@ -12,7 +12,7 @@ def signup_user():
     email = data.get('email')
     password = data.get('password')
     nickname = data.get('nickname')
-    country = data.get('country')
+    country = data.get('country', None)
     teamid = data.get('teamid', None)
 
     if not email or not password:
