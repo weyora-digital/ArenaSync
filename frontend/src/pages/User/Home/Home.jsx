@@ -1,9 +1,16 @@
 import React from 'react';
+import Navbar from '../../../components/Navbar/Navbar';
+import TopGames from '../../../components/TopGames/TopGames';
+import UpcomingChallenges from '../../../components/UpcommingChallenges/UpcomingChallenges';
+import Footer from '../../../components/Footer/Footer';
 
 const Home = () => {
   return (
     <div className="home">
-      <h1>Welcome to GamingSite</h1>
+      <Navbar />
+      <TopGames/>
+      <UpcomingChallenges/>
+      <Footer/>
     </div>
   );
 };

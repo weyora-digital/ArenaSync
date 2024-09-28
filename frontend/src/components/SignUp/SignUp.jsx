@@ -1,42 +1,59 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import avatar from '../../assests/images/profile.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCamera } from '@fortawesome/free-solid-svg-icons';
-import toast, { Toaster } from 'react-hot-toast';
-import { useFormik } from 'formik';
-import { registerValidation } from '../../helper/validate';
-import convertToBase64 from '../../helper/convert';
-import { registerUser } from '../../helper/helper';
-import logo from '../../assests/images/logo.png'
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import avatar from "../../assests/images/profile.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCamera } from "@fortawesome/free-solid-svg-icons";
+import toast, { Toaster } from "react-hot-toast";
+import { useFormik } from "formik";
+import { registerValidation } from "../../helper/validate";
+import convertToBase64 from "../../helper/convert";
+import { registerUser } from "../../helper/helper";
+import { useAuthStore } from "../../store/store";
+import logo from "../../assests/images/logo.png";
 
 export default function SignupForm({ isOpen, onClose }) {
   const navigate = useNavigate();
   const [file, setFile] = useState();
 
+  const setUsername = useAuthStore((state) => state.setUsername); // Access Zustand state
+  const setToken = useAuthStore((state) => state.setToken); // Access Zustand state
+
   // Formik should always be called, regardless of the modal state
   const formik = useFormik({
     initialValues: {
-      email: '',
-      nickname: '',
-      password: '',
+      email: "",
+      nickname: "",
+      password: "",
     },
     validate: registerValidation,
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async (values) => {
-      values = await Object.assign(values, { profile: file || '' });
-      let registerPromise = registerUser(values);
-
-      toast.promise(registerPromise, {
-        loading: 'Creating...',
-        success: <b>Registered Successfully!</b>,
-        error: <b>Could not Register.</b>,
-      });
-
-      registerPromise.then(() => {
-        navigate('/login');
-      });
+      console.log("hello")
+      values = await Object.assign(values, { profile: file || "" });
+      console.log(values);
+      try {
+        console.log("hello")
+        const response = await registerUser(values);
+  
+        console.log(response);
+        // Assuming the API returns the token and username upon successful signup
+        const { access_token, username } = response;
+  
+        // Store token and username in Zustand store
+        setToken(access_token);
+        setUsername(username);
+  
+        // Store token in localStorage for persistence
+        localStorage.setItem("token", access_token);
+  
+        // Redirect to user home page
+        navigate("/user/home");
+        
+      } catch (error) {
+        // Handle error (e.g., show error message)
+        toast.error("Registration failed. Please try again.");
+      }
     },
   });
 
@@ -66,15 +83,13 @@ export default function SignupForm({ isOpen, onClose }) {
 
         {/* Logo */}
         <div className="flex justify-center mb-6">
-          <img
-            src={logo}
-            alt="InGame Esports Logo"
-            className="w-16"
-          />
+          <img src={logo} alt="InGame Esports Logo" className="w-16" />
         </div>
 
         {/* Form Title */}
-        <h2 className="text-center text-2xl mb-6">Welcome to InGame eSports Platform!</h2>
+        <h2 className="text-center text-2xl mb-6">
+          Welcome to InGame eSports Platform!
+        </h2>
         <p className="text-center text-gray-400 mb-8">
           Enter your personal details to experience your eSport Portal.
         </p>
@@ -109,19 +124,19 @@ export default function SignupForm({ isOpen, onClose }) {
           </div> */}
 
           <input
-            {...formik.getFieldProps('email')}
+            {...formik.getFieldProps("email")}
             type="email"
             placeholder="Email"
             className="w-full p-3 bg-gray-800 text-gray-300 rounded-md"
           />
           <input
-            {...formik.getFieldProps('nickname')}
+            {...formik.getFieldProps("nickname")}
             type="text"
             placeholder="Nickname"
             className="w-full p-3 bg-gray-800 text-gray-300 rounded-md"
           />
           <input
-            {...formik.getFieldProps('password')}
+            {...formik.getFieldProps("password")}
             type="password"
             placeholder="Password"
             className="w-full p-3 bg-gray-800 text-gray-300 rounded-md"
@@ -155,7 +170,7 @@ export default function SignupForm({ isOpen, onClose }) {
 
         {/* Bottom Link */}
         <p className="text-center text-gray-400 mt-6">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link className="text-blue-500 hover:underline" to="/login">
             Log In
           </Link>

@@ -33,22 +33,16 @@ export async function getUser({ username }){
     }
 }
 
-/** get User details */
-export async function getRecommendation({ username }){
-    try {
-        console.log(username)
-        const { data } = await axios.get(`http://127.0.0.1:5001/api/getRecommendation/${username}`);
-        return { data };
-    } catch (error) {
-        return { error : "Username doesn't Match...!"}
-    }
-}
+
 
 /** register user function */
 export async function registerUser(credentials){
     try {
-        const { data : { msg }, status } = await axios.post(`http://127.0.0.1:5000/user/signup`, credentials);
-
+        console.log(credentials);
+        const response = await axios.post(`http://127.0.0.1:5000/user/signup`, credentials);
+        
+        const { data, status } = response;
+        
         let { username, email } = credentials;
 
         /** send email */
@@ -56,9 +50,19 @@ export async function registerUser(credentials){
         //     await axios.post(`http://127.0.0.1:5001/api/registerMail`, { username, userEmail : email, text : msg})
         // }
 
-        return Promise.resolve(msg)
+        return Promise.resolve(data)
     } catch (error) {
         return Promise.reject({ error })
+    }
+}
+
+/** login user function */
+export async function loginUser(credentials) {
+    try {
+        const response = await axios.post(`http://127.0.0.1:5000/user/login`, credentials);
+        return Promise.resolve(response.data);
+    } catch (error) {
+        return Promise.reject(error);
     }
 }
 
@@ -88,18 +92,7 @@ export async function updateUser(response){
 }
 
 
-/** update user profile function */
-export async function updateRecommendation(response){
-    try {
-        
-        const token = await localStorage.getItem('token');
-        const data = await axios.put(`http://localhost:5001/api/updateRecommendation`, response, { headers : { "Authorization" : `Bearer ${token}`}});
 
-        return Promise.resolve({ data })
-    } catch (error) {
-        return Promise.reject({ error : "Couldn't Update Profile...!"})
-    }
-}
 
 /** generate OTP */
 export async function generateOTP(username){

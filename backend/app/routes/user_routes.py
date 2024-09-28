@@ -3,10 +3,14 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from ..utils.db import db
 from ..models import Player, Team 
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
+from flask_cors import cross_origin
 
 user_blueprint = Blueprint('user', __name__)
 
+# @user_blueprint.route('/signup', methods=['POST', 'OPTIONS'])
 @user_blueprint.route('/signup', methods=['POST'])
+
+# @cross_origin(origin='*')
 def signup_user():
     data = request.get_json()
     email = data.get('email')
@@ -33,8 +37,19 @@ def signup_user():
     
     db.session.add(new_user)
     db.session.commit()
-    return jsonify({'message': 'User created successfully'}), 201
+    # Auto-login: generate access and refresh tokens
+    additional_claims = {'role': 'user'}
+    access_token = create_access_token(identity=new_user.userid, additional_claims=additional_claims)
+    refresh_token = create_refresh_token(identity=new_user.userid, additional_claims=additional_claims)
 
+    # Return the tokens along with the success message
+    return jsonify({
+        'message': 'User created successfully',
+        'access_token': access_token,
+        'refresh_token': refresh_token,
+        'user_id': new_user.userid,
+        'username': new_user.nickname
+    }), 201
 
 @user_blueprint.route('/login', methods=['POST'])
 def login_user():
@@ -51,7 +66,13 @@ def login_user():
         additional_claims = {'role': 'user'}
         access_token = create_access_token(identity=user.userid, additional_claims=additional_claims)
         refresh_token = create_refresh_token(identity=user.userid, additional_claims=additional_claims)
-        return jsonify({'message': 'Login successful', 'user_id': user.userid, 'access_token': access_token, 'refresh_token': refresh_token}), 200
+        return jsonify({
+            'message': 'Login successful', 
+            'user_id': user.userid,
+            'username': user.nickname, 
+            'access_token': access_token, 
+            'refresh_token': refresh_token
+            }), 200
     else:
         return jsonify({'message': 'Invalid username or password'}), 401
 
