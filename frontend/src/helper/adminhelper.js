@@ -44,3 +44,41 @@ export const fetchAdminEvents = async () => {
     throw error;
   }
 };
+
+
+// Function to delete an event (Admin only)
+export const deleteEvent = async (eventId, token) => {
+  try {
+    const response = await axios.delete(
+      `http://127.0.0.1:5000/event/delete/${eventId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,  // Admin token for authorization
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : { message: 'Event deletion failed' };
+  }
+};
+
+
+// Function to update an event (Admin only)
+export const updateEvent = async (eventId, updatedEventData, token) => {
+  try {
+    const response = await axios.put(
+      `http://127.0.0.1:5000/event/update/${eventId}`,
+      updatedEventData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,  // Admin token for authorization
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : { message: 'Event update failed' };
+  }
+};
