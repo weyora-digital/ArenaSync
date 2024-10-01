@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { useAuthStore } from "../store/store";
+import { useAuthStore, useAdminStore } from "../store/store";
 
 export const AuthorizeUser = ({children}) => {
     const token = localStorage.getItem('token');
@@ -20,3 +20,13 @@ export const ProtectRoute = ({ children}) => {
 
     return children
 }
+
+export const ProtectedAdminRoute = ({ children }) => {
+    const isAuthenticated = useAdminStore((state) => state.admin.isAuthenticated);
+  
+    if (!isAuthenticated) {
+      return <Navigate to="/admin/login" replace />;
+    }
+  
+    return children;
+  };

@@ -67,3 +67,32 @@ def register_event():
         db.session.commit()
 
         return jsonify({'message': 'Registered successfully', 'registration_id': new_registration.RegistrationID}), 201
+
+@event_blueprint.route('/events', methods=['GET'])
+def get_events():
+    try:
+        # Fetch all events from the database
+        events = Event.query.all()
+
+        # Serialize events to JSON format
+        event_list = []
+        for event in events:
+            event_data = {
+                'eventid': event.eventid,
+                'gamename': event.gamename,
+                'country': event.country,
+                'organizer': event.organizer,
+                'location': event.location,
+                'starting_date': event.starting_date.strftime('%Y-%m-%d'),
+                'end_date': event.end_date.strftime('%Y-%m-%d'),
+                'starting_time': event.starting_time.strftime('%H:%M:%S'),
+                'end_time': event.end_time.strftime('%H:%M:%S'),
+                'registration_closing': event.registration_closing.strftime('%Y-%m-%d'),
+                'adminid': event.adminid
+            }
+            event_list.append(event_data)
+
+        return jsonify({'events': event_list}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

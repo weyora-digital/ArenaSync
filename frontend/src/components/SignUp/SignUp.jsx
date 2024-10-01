@@ -11,7 +11,7 @@ import { registerUser } from "../../helper/helper";
 import { useAuthStore } from "../../store/store";
 import logo from "../../assests/images/logo.png";
 
-export default function SignupForm({ isOpen, onClose }) {
+export default function SignupForm({ isOpen, onClose, openLoginModal }) {
   const navigate = useNavigate();
   const [file, setFile] = useState();
 
@@ -171,9 +171,15 @@ export default function SignupForm({ isOpen, onClose }) {
         {/* Bottom Link */}
         <p className="text-center text-gray-400 mt-6">
           Already have an account?{" "}
-          <Link className="text-blue-500 hover:underline" to="/login">
+          <span 
+            className="text-blue-500 hover:underline cursor-pointer"
+            onClick={() => {
+              onClose(); // Close the login modal
+              openLoginModal(); // Open the signup modal
+            }}
+          >
             Log In
-          </Link>
+          </span>
         </p>
       </div>
     </div>

@@ -16,3 +16,12 @@ export const useAuthStore = create((set) => ({
         auth: { username: '', active: false, token: null }
       })),
 }))
+
+export const useAdminStore = create((set) => ({
+  admin: {
+    email: '',
+    isAuthenticated: false,
+  },
+  loginAdmin: (email) => set({ admin: { email, isAuthenticated: true } }),
+  logoutAdmin: () => set({ admin: { email: '', isAuthenticated: false } }),
+}));
