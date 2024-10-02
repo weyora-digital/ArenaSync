@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import toast, { Toaster } from "react-hot-toast";
 import { loginUser } from "../../helper/helper";  // Login API call
 import { useAuthStore } from "../../store/store"; // Zustand store
-import logo from "../../assests/images/logo.png"; // Your logo
+import logo from "../../assets/images/logo.png"; // Your logo
 
 export default function LoginForm({ isOpen, onClose, openSignupModal }) { // Add openSignupModal prop
   const navigate = useNavigate();
@@ -50,10 +50,10 @@ export default function LoginForm({ isOpen, onClose, openSignupModal }) { // Add
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <Toaster position="top-center" reverseOrder={false} />
       
-      <div className="bg-gray-800 p-8 rounded-lg shadow-lg text-white w-full max-w-md relative">
+      <div className="bg-gray-800 p-8 rounded-lg shadow-lg text-primary_text w-full max-w-md relative">
         {/* Close Button */}
         <button
-          className="absolute top-4 right-4 text-gray-400 hover:text-white"
+          className="absolute top-4 right-4 text-gray-400 hover:text-primary_text"
           onClick={onClose}
         >
           &times;

@@ -1,11 +1,11 @@
 import React from "react";
-import "./Footer.scss"; // Custom SCSS for additional styles if necessary
-import logo from "../../assests/images/logo.png";
+// import "./Footer.scss"; // Custom SCSS for additional styles if necessary
+import logo from "../../assets/images/logo.png";
 
 function Footer() {
   return (
     <footer className="bg-gray-900 text-white pt-12">
-      <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="mx-auto px-8 grid grid-cols-1 md:grid-cols-2 gap-8">
         
         {/* Logo and Description (Taking Half the Space) */}
         <div className="col-span-1 md:col-span-1 pr-8"> 
@@ -102,7 +102,7 @@ function Footer() {
       </div>
 
       {/* Bottom Footer */}
-      <div className="bg-gray-800 text-center py-4 mt-8">
+      <div className="flex bg-gray-800 text-center justify-between items-center w-full py-4 mt-8 px-8">
         <p className="text-sm text-gray-400">
           ArenaSL.LK © 2024 | Your home for eSports and Digital Entertainment |
           v0.0.1
