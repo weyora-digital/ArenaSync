@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 // import { useAdminStore } from '../../store/store';
 import { Toaster, toast } from 'react-hot-toast';
 import AdminSidebar from '../../../components/AdminSidebar/AdminSidebar';
@@ -37,21 +36,31 @@ const EventManager = () => {
 
   const handleBannerChange = (e) => {
     setBanner(e.target.files[0]);
+    console.log(banner);
   };
 
   const handleCreateOrUpdateEvent = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('admin_token');
 
+    const formData = new FormData();
+    for (const key in newEvent) {
+      formData.append(key, newEvent[key]);
+    }
+    if (banner) {
+      formData.append('file', banner); // Add the banner image file to the form data
+    }
+
+
     try {
       if (editingEvent) {
         // Update existing event
-        const response = await updateEvent(editingEvent.eventid, newEvent, token);
+        const response = await updateEvent(editingEvent.eventid, formData, token);
         toast.success('Event updated successfully');
         setEditingEvent(null); // Clear editing state
       } else {
         // Create new event
-        const response = await createAdminEvent(newEvent, token);
+        const response = await createAdminEvent(formData, token);
         toast.success('Event created successfully');
       }
       setNewEvent({
@@ -65,6 +74,7 @@ const EventManager = () => {
         endTime: '',
         registrationClosing: ''
       });
+      setBanner(null);
       fetchEvents(); // Refresh event list
     } catch (error) {
       console.error('Error saving event:', error);
@@ -73,7 +83,17 @@ const EventManager = () => {
   };
 
   const handleEditEvent = (event) => {
-    setNewEvent(event);
+    setNewEvent({
+      gamename: event.gamename,
+      country: event.country,
+      organizer: event.organizer,
+      location: event.location,
+      startingDate: event.starting_date,
+      endDate: event.end_date,
+      startingTime: event.starting_time,
+      endTime: event.end_time,
+      registrationClosing: event.registration_closing
+    });
     setEditingEvent(event);
   };
 
@@ -181,6 +201,13 @@ const EventManager = () => {
               className="w-full p-2 border"
               required
             />
+             <input
+              type="file"
+              name="file"
+              accept='.jpg, .jpeg, .png'
+              onChange={handleBannerChange}
+              className="w-full p-2 border"
+            />
             <button type="submit" className="bg-blue-500 text-white p-2 rounded">
               {editingEvent ? 'Update Event' : 'Create Event'}
             </button>
@@ -194,6 +221,7 @@ const EventManager = () => {
               <li key={event.eventid} className="mb-4">
                 <p>{event.gamename}</p>
                 <p>{event.country}</p>
+                {/* <img src={`/asserts/event_img/${event.image_path}`} alt="Event banner" className="w-32 h-32"/> */}
                 <button
                   onClick={() => handleEditEvent(event)}
                   className="bg-yellow-500 text-white p-1 rounded mr-2"

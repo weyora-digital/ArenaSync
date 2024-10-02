@@ -5,23 +5,45 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 import requests
 from ..decoraters import admin_required, user_required
 from datetime import datetime
+from werkzeug.utils import secure_filename
+import os
+from flask import current_app
 
 event_blueprint = Blueprint('event', __name__)
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @event_blueprint.route('/create', methods=['POST'])
 @admin_required
 def create_event():
-        if not request.is_json:
-            return jsonify({"msg": "Missing JSON in request"}), 400
+        if not request.is_json and 'file' not in request.files:
+            return jsonify({"msg": "Missing JSON or Image in request"}), 400
 
-        data = request.get_json()
+        data = request.form  # This will get the other data when using multipart/form-data
+        file = request.files['file']
+
+        # if not request.is_json:
+        #     return jsonify({"msg": "Missing JSON in request"}), 400
+
+        # data = request.get_json()
         
         # Get admin ID from JWT token
         admin_id = get_jwt_identity()
 
         try:
+            # Save the file if provided
+            if file:
+                filename = secure_filename(file.filename)
+                image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                file.save(image_path)
+            else:
+                image_path = None  # Handle no file case
+
             event = Event(
-                gamename = data['gamename'],
+                gamename=data['gamename'],
                 country=data['country'],
                 organizer=data['organizer'],
                 location=data['location'],
@@ -30,6 +52,7 @@ def create_event():
                 starting_time=data['startingTime'],
                 end_time=data['endTime'],
                 registration_closing=data['registrationClosing'],
+                image_path=image_path,  # Save the file path in the database
                 adminid=admin_id
             )
 
@@ -38,7 +61,7 @@ def create_event():
             return jsonify({"message": "Event created successfully", "eventId": event.eventid}), 201
         except Exception as e:
             return jsonify({"error": str(e)}), 500
-
+        
 @event_blueprint.route('/register_event', methods=['POST'])
 @user_required
 def register_event():
@@ -88,7 +111,8 @@ def get_events():
                 'starting_time': event.starting_time.strftime('%H:%M:%S'),
                 'end_time': event.end_time.strftime('%H:%M:%S'),
                 'registration_closing': event.registration_closing.strftime('%Y-%m-%d'),
-                'adminid': event.adminid
+                'adminid': event.adminid,
+                'img_path': event.image_path
             }
             event_list.append(event_data)
 
@@ -96,3 +120,59 @@ def get_events():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@event_blueprint.route('/delete/<int:event_id>', methods=['DELETE'])
+@admin_required
+def delete_event(event_id):
+    try:
+        # Get the event by ID
+        event = Event.query.get(event_id)
+        
+        if not event:
+            return jsonify({"message": "Event not found"}), 404
+        
+        # Delete all registrations associated with this event
+        EventRegistration.query.filter_by(EventID=event_id).delete()
+        
+        # Delete the event from the database
+        db.session.delete(event)
+        db.session.commit()
+
+        return jsonify({"message": "Event deleted successfully"}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+@event_blueprint.route('/update/<int:event_id>', methods=['PUT'])
+@admin_required
+def update_event(event_id):
+    if not request.is_json:
+        return jsonify({"msg": "Missing JSON in request"}), 400
+
+    data = request.get_json()
+    
+    try:
+        # Get the event by ID
+        event = Event.query.get(event_id)
+
+        if not event:
+            return jsonify({"message": "Event not found"}), 404
+
+        # Update the event details with the provided data
+        event.gamename = data.get('gamename', event.gamename)
+        event.country = data.get('country', event.country)
+        event.organizer = data.get('organizer', event.organizer)
+        event.location = data.get('location', event.location)
+        event.starting_date = datetime.strptime(data.get('startingDate', event.starting_date.strftime('%Y-%m-%d')), '%Y-%m-%d')
+        event.end_date = datetime.strptime(data.get('endDate', event.end_date.strftime('%Y-%m-%d')), '%Y-%m-%d')
+        event.starting_time = datetime.strptime(data.get('startingTime', event.starting_time.strftime('%H:%M:%S')), '%H:%M:%S').time()
+        event.end_time = datetime.strptime(data.get('endTime', event.end_time.strftime('%H:%M:%S')), '%H:%M:%S').time()
+        event.registration_closing = datetime.strptime(data.get('registrationClosing', event.registration_closing.strftime('%Y-%m-%d')), '%Y-%m-%d')
+
+        db.session.commit()
+
+        return jsonify({"message": "Event updated successfully"}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+

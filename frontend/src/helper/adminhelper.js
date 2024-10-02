@@ -25,7 +25,7 @@ export const createAdminEvent = async (eventData, token) => {
       {
         headers: {
           Authorization: `Bearer ${token}`,  // Admin token for authorization
-          'Content-Type': 'application/json'  // Ensure JSON content type
+          // 'Content-Type': 'application/json'  // Ensure JSON content type
         },
       }
     );

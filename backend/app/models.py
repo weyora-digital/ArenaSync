@@ -40,6 +40,7 @@ class Event(db.Model):
     starting_time = db.Column(db.Time, nullable=False)
     end_time = db.Column(db.Time, nullable=False)
     registration_closing = db.Column(db.DateTime, nullable=False)
+    image_path = db.Column(db.String(255))
 
 class EventRegistration(db.Model):
     __tablename__ = 'event_registration'

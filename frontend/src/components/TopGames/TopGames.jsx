@@ -21,8 +21,8 @@ function TopGames() {
   ];
 
   return (
-    <section className="top-games bg-primary_bg py-20">
-      <div className="mx-auto px-4">
+    <section className="flex flex-col bg-primary_bg px-24 py-20">
+      <div className="mx-auto px-">
         <h2 className="text-3xl font-bold text-primary_text mb-6">
           <span className="text-primary_text border-l-4 border-blue-500 pl-2">
             TOP GAMES
