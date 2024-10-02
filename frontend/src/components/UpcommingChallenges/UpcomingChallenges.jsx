@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { fetchUpcomingEvents } from "../../helper/helper";
 import EventCard from "./EventCard";
-import './UpcomingChallenges.scss'; // For custom SCSS if needed
 import { Toaster, toast } from "react-hot-toast";
 
 const UpcomingChallenges = () => {
   const [events, setEvents] = useState([]);
   const [selectedGame, setSelectedGame] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
+  const games = ["Apex Legends", "Call of Duty", "Fortnite"];
+  const countries = ["USA", "UK", "Canada"];
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -15,14 +16,14 @@ const UpcomingChallenges = () => {
         const fetchedEvents = await fetchUpcomingEvents();
         setEvents(fetchedEvents);
       } catch (error) {
-        toast.error('Failed to load events');
+        toast.error("Failed to load events");
       }
     };
     fetchEvents();
   }, []);
 
   // Optionally, filter events by selectedGame and selectedCountry
-  const filteredEvents = events.filter(event => {
+  const filteredEvents = events.filter((event) => {
     return (
       (selectedGame ? event.gamename === selectedGame : true) &&
       (selectedCountry ? event.country === selectedCountry : true)
@@ -30,50 +31,54 @@ const UpcomingChallenges = () => {
   });
 
   return (
-    <section className="upcoming-challenges py-12">
-      <Toaster position="top-center" reverseOrder={false} />
-      <div className="container mx-auto px-4">
-        
-        {/* Title and View All Link Row */}
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold text-white">
-            <span className="text-blue-500 border-l-4 border-blue-500 pl-2">
-              UPCOMING CHALLENGES
-            </span>
-          </h2>
-          <a href="#" className="text-blue-500 hover:underline">
-            VIEW ALL CHALLENGES &rarr;
-          </a>
-        </div>
-
-        {/* Filters Row */}
-        <div className="flex justify-start md:justify-end items-center mb-6">
-          {/* Game Filter */}
-          <div className="w-full md:w-1/4 mr-4">
-            <select
-              className="w-full p-2 bg-gray-800 text-gray-300 border border-gray-700 rounded-md"
-              value={selectedGame}
-              onChange={(e) => setSelectedGame(e.target.value)}
-            >
-              <option value="">Filter by Game</option>
-              <option value="Apex Legends">Apex Legends</option>
-              <option value="Call of Duty">Call of Duty</option>
-              {/* Add more options as needed */}
-            </select>
+    <section className="flex flex-col bg-primary_bg pb-12 px-24">
+      <>
+        <div className="flex flex-row-2">
+          <div className="flex justify-start w-full items-center mb-8">
+            <h2 className="text-3xl font-bold text-primary_text mr-10">
+              <span className="border-l-4 border-blue-500 pl-2">
+                UPCOMING CHALLENGES
+              </span>
+            </h2>
+            <a href="#" className="text-blue-500 hover:underline items-center">
+              VIEW ALL CHALLENGES &rarr;
+            </a>
           </div>
 
-          {/* Country Filter */}
-          <div className="w-full md:w-1/4">
-            <select
-              className="w-full p-2 bg-gray-800 text-gray-300 border border-gray-700 rounded-md"
-              value={selectedCountry}
-              onChange={(e) => setSelectedCountry(e.target.value)}
-            >
-              <option value="">Filter by Country</option>
-              <option value="USA">USA</option>
-              <option value="UK">UK</option>
-              {/* Add more options as needed */}
-            </select>
+          {/* Filters Row */}
+          <div className="flex justify-start w-full md:justify-end items-center mb-6">
+            {/* Game Filter */}
+            <div className="w-full md:w-1/4 mr-4">
+              <select
+                className="w-full p-2 bg-gray-800 text-gray-300 border border-gray-700 rounded-md"
+                value={selectedGame}
+                onChange={(e) => setSelectedGame(e.target.value)}
+                aria-label="Filter by Game"
+              >
+                <option value="">Filter by Game</option>
+                {games.map((game) => (
+                  <option key={game} value={game}>
+                    {game}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="w-full md:w-1/4">
+              <select
+                className="w-full p-2 bg-gray-800 text-gray-300 border border-gray-700 rounded-md"
+                value={selectedCountry}
+                onChange={(e) => setSelectedCountry(e.target.value)}
+                aria-label="Filter by Country"
+              >
+                <option value="">Filter by Country</option>
+                {countries.map((country) => (
+                  <option key={country} value={country}>
+                    {country}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
 
@@ -87,7 +92,7 @@ const UpcomingChallenges = () => {
             <p className="text-gray-500">No Challenges Available</p>
           )}
         </div>
-      </div>
+      </>
     </section>
   );
 };

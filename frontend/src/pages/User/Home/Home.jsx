@@ -6,7 +6,7 @@ import Footer from '../../../components/Footer/Footer';
 
 const Home = () => {
   return (
-    <div className="home">
+    <div className="home bg-background text-center p-12">
       <Navbar />
       <TopGames/>
       <UpcomingChallenges/>

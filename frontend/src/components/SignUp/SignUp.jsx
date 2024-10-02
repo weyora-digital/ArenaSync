@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import avatar from "../../assests/images/profile.png";
+import avatar from "../../assets/images/profile.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
 import toast, { Toaster } from "react-hot-toast";
@@ -9,7 +9,7 @@ import { registerValidation } from "../../helper/validate";
 import convertToBase64 from "../../helper/convert";
 import { registerUser } from "../../helper/helper";
 import { useAuthStore } from "../../store/store";
-import logo from "../../assests/images/logo.png";
+import logo from "../../assets/images/logo.png";
 
 export default function SignupForm({ isOpen, onClose, openLoginModal }) {
   const navigate = useNavigate();
@@ -72,10 +72,10 @@ export default function SignupForm({ isOpen, onClose, openLoginModal }) {
       <Toaster position="top-center" reverseOrder={false} />
 
       {/* Modal Content */}
-      <div className="bg-gray-900 text-white p-8 rounded-lg w-full max-w-lg shadow-lg relative">
+      <div className="bg-gray-800 text-primary_text p-8 rounded-lg w-full max-w-lg shadow-lg relative">
         {/* Close Button */}
         <button
-          className="absolute top-4 right-4 text-gray-400 hover:text-white"
+          className="absolute top-4 right-4 text-gray-400 hover:text-primary_text"
           onClick={onClose}
         >
           &times;
@@ -127,19 +127,19 @@ export default function SignupForm({ isOpen, onClose, openLoginModal }) {
             {...formik.getFieldProps("email")}
             type="email"
             placeholder="Email"
-            className="w-full p-3 bg-gray-800 text-gray-300 rounded-md"
+            className="w-full p-3 bg-gray-700 rounded-md text-gray-300"
           />
           <input
             {...formik.getFieldProps("nickname")}
             type="text"
             placeholder="Nickname"
-            className="w-full p-3 bg-gray-800 text-gray-300 rounded-md"
+            className="w-full p-3 bg-gray-700 rounded-md text-gray-300"
           />
           <input
             {...formik.getFieldProps("password")}
             type="password"
             placeholder="Password"
-            className="w-full p-3 bg-gray-800 text-gray-300 rounded-md"
+            className="w-full p-3 bg-gray-700 rounded-md text-gray-300"
           />
           <button
             className="w-full bg-blue-600 p-3 rounded-md hover:bg-blue-700"
