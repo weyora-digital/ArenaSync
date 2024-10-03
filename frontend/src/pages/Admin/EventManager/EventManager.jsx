@@ -125,6 +125,7 @@ const EventManager = () => {
             {editingEvent ? 'Update Event' : 'Create New Event'}
           </h2>
           <form onSubmit={handleCreateOrUpdateEvent} className="space-y-4">
+            <p>game name</p>
             <input
               type="text"
               name="gamename"
