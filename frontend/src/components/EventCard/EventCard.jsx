@@ -1,7 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MdGroups } from "react-icons/md";
 
 const EventCard = ({ event }) => {
+  const [currentDate, setCurrentDate] = useState("");
+
+  useEffect(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed, so add 1
+    const day = String(today.getDate()).padStart(2, "0");
+
+    const formattedDate = `${year}-${month}-${day}`;
+    setCurrentDate(formattedDate);
+  }, []);
+
+  console.log(
+    currentDate,
+    event.registration_closing,
+    currentDate > event.registration_closing
+  );
+
   return (
     <div className="bg-gray-700 w-80 rounded-lg shadow-sm shadow-gray-900 text-primary_text event-card">
       <img
@@ -46,7 +64,21 @@ const EventCard = ({ event }) => {
           </span>
         </div>
         <div className="flex items-center justify-center h-10 bg-name_background">
-          <span className="text-event_text">Event Concluded</span>
+          <span
+            className={`text-xs font-bold text-event_text uppercase ${
+              currentDate < event.registration_closing
+                ? "text-blue_text"
+                : currentDate < event.starting_date
+                ? "text-green_text"
+                : "Event Concluded"
+            }`}
+          >
+            {currentDate < event.registration_closing
+              ? "Register Now"
+              : currentDate < event.starting_date
+              ? "Event Ongoing"
+              : "Event Concluded"}
+          </span>
         </div>
       </div>
     </div>

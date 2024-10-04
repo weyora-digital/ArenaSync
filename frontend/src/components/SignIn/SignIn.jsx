@@ -34,7 +34,7 @@ export default function LoginForm({ isOpen, onClose, openSignupModal }) { // Add
         localStorage.setItem("token", access_token);
 
         // Redirect to user home page
-        navigate("/user/home");
+        navigate("/");
         
       } catch (error) {
         // Handle error (e.g., show error message)

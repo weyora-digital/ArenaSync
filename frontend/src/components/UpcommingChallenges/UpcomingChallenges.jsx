@@ -53,8 +53,6 @@ const UpcomingChallenges = () => {
     );
   });
 
-  console.log(filteredEvents.length);
-
   return (
     <section className="flex flex-col w-full bg-primary_bg pb-12 sm:px-16 lg:px-24">
       <Toaster />

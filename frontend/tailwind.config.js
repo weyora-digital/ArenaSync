@@ -14,6 +14,8 @@ module.exports = {
       organizer_background: "#404357",
       confirm_background: "#181A24",
       event_text: "#8B90B2",
+      green_text: "#70C116",
+      blue_text: "#3C84AC",
       black: "#151515",
       blue: {
         500: "#3b82f6",
