@@ -6,7 +6,6 @@ import rocketLeague from "../../assets/images/Games/dota.jpg";
 import dota2 from "../../assets/images/Games/rocektleague.jpg";
 import mobileLegends from "../../assets/images/Games/mobilelegend.jpg";
 import clashRoyale from "../../assets/images/Games/clashroyal.jpg";
-// import "./TopGames.scss";
 import GameCard from "../GameCard/GameCard";
 
 function TopGames() {
@@ -21,14 +20,14 @@ function TopGames() {
   ];
 
   return (
-    <section className="flex flex-col bg-primary_bg px-24 py-20">
-      <div className="mx-auto px-">
+    <section className="flex flex-col bg-primary_bg w-full sm:px-16 lg:px-24 py-20">
+      <div>
         <h2 className="text-3xl font-bold text-primary_text mb-6">
           <span className="text-primary_text border-l-4 border-blue-500 pl-2">
             TOP GAMES
           </span>
         </h2>
-        <div className="flex flex-row space-x-7 justify-center ">
+        <div className="flex flex-row space-x-7 px-10 justify-center ">
           {games.map((game, index) => (
             <GameCard key={index} game={game} />
           ))}
@@ -39,35 +38,3 @@ function TopGames() {
 }
 
 export default TopGames;
-
-{
-  /* <ul className="games-list flex space-x-4">
-  <li className="game-card">
-    <img src={valorant} alt="Valorant" className="game-image" />
-  </li>
-  <li className="game-card"></li>
-  <li className="game-card">
-    <img src={cod} alt="Call of Duty Mobile" className="game-image" />
-  </li>
-  <li className="game-card">
-    <img
-      src={rocketLeague}
-      alt="Rocket League"
-      className="game-image"
-    />
-  </li>
-  <li className="game-card">
-    <img src={dota2} alt="Dota 2" className="game-image" />
-  </li>
-  <li className="game-card">
-    <img
-      src={mobileLegends}
-      alt="Mobile Legends"
-      className="game-image"
-    />
-  </li>
-  <li className="game-card">
-    <img src={clashRoyale} alt="Clash Royale" className="game-image" />
-  </li>
-</ul> */
-}
