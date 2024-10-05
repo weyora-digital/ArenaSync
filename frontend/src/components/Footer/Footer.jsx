@@ -1,14 +1,12 @@
 import React from "react";
-// import "./Footer.scss"; // Custom SCSS for additional styles if necessary
 import logo from "../../assets/images/logo.png";
 
 function Footer() {
   return (
     <footer className="bg-gray-900 text-white pt-12">
       <div className="mx-auto px-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-        
         {/* Logo and Description (Taking Half the Space) */}
-        <div className="col-span-1 md:col-span-1 pr-8"> 
+        <div className="col-span-1 md:col-span-1 pr-8">
           <img src={logo} alt="InGame Esports Logo" className="w-32 mb-4" />
           <p className="text-sm text-gray-300">
             ingame.gg by InGame Esports is a tournament platform for all South
@@ -31,7 +29,6 @@ function Footer() {
 
         {/* Main Menu, Useful Links, and Contact (Taking Remaining Space) */}
         <div className="col-span-1 grid grid-cols-3 gap-8">
-          
           {/* Main Menu */}
           <div>
             <h4 className="text-blue-500 border-l-4 border-blue-500 pl-2 mb-4 font-bold">
@@ -39,32 +36,50 @@ function Footer() {
             </h4>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-sm text-gray-300 hover:text-white hover:underline">
+                <a
+                  href="#"
+                  className="text-sm text-gray-300 hover:text-white hover:underline"
+                >
                   Home
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-gray-300 hover:text-white hover:underline">
+                <a
+                  href="#"
+                  className="text-sm text-gray-300 hover:text-white hover:underline"
+                >
                   Events
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-gray-300 hover:text-white hover:underline">
+                <a
+                  href="#"
+                  className="text-sm text-gray-300 hover:text-white hover:underline"
+                >
                   Organisations & Clans
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-gray-300 hover:text-white hover:underline">
+                <a
+                  href="#"
+                  className="text-sm text-gray-300 hover:text-white hover:underline"
+                >
                   Terms of Service
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-gray-300 hover:text-white hover:underline">
+                <a
+                  href="#"
+                  className="text-sm text-gray-300 hover:text-white hover:underline"
+                >
                   Privacy Policy
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-gray-300 hover:text-white hover:underline">
+                <a
+                  href="#"
+                  className="text-sm text-gray-300 hover:text-white hover:underline"
+                >
                   Help & Support
                 </a>
               </li>
@@ -78,12 +93,18 @@ function Footer() {
             </h4>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-sm text-gray-300 hover:text-white hover:underline">
+                <a
+                  href="#"
+                  className="text-sm text-gray-300 hover:text-white hover:underline"
+                >
                   Login
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-gray-300 hover:text-white hover:underline">
+                <a
+                  href="#"
+                  className="text-sm text-gray-300 hover:text-white hover:underline"
+                >
                   Sign Up
                 </a>
               </li>

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import "./Navbar.scss";
 import logo from "../../assets/images/logo.png";
 import SignupForm from "../SignUp/SignUp";
 import LoginForm from "../SignIn/SignIn";
@@ -79,8 +78,9 @@ const Navbar = () => {
         </div>
         {/* Navigation Links */}
         <div className="flex space-x-16">
-          {navBarLink.map((path) => (
+          {navBarLink.map((path, index) => (
             <Link
+              key={index}
               to={path.link}
               className="hover:text-secondary_text transition-colors duration-300 ease-in-out font-medium"
             >
@@ -88,28 +88,6 @@ const Navbar = () => {
             </Link>
           ))}
         </div>
-        {/* <ul className="navbar-links flex space-x-8">
-          <li>
-            <Link to="/user/home" className="hover:text-gray-400">
-              HOME
-            </Link>
-          </li>
-          <li>
-            <Link to="/events" className="hover:text-gray-400">
-              EVENTS
-            </Link>
-          </li>
-          <li>
-            <Link to="/organizations" className="hover:text-gray-400">
-              ORGANIZATIONS & CLANS
-            </Link>
-          </li>
-          <li>
-            <Link to="/challenges" className="hover:text-gray-400">
-              CHALLENGES
-            </Link>
-          </li>
-        </ul> */}
         {/* Auth Links */}
         <div className="navbar-auth flex space-x-10">
           {auth.active ? (
