@@ -1,8 +1,15 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Config:
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:19002631@localhost/arenasync'
-    # SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:26918@localhost/arenasync'
+    POSTGRES_USER = os.getenv('POSTGRES_USER')
+    POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+    DATABASE_NAME = os.getenv('DATABASE_NAME')
+
+    SQLALCHEMY_DATABASE_URI = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@localhost/{DATABASE_NAME}'
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY =  os.urandom(24) # Generates a random secret key
     JWT_ACCESS_TOKEN_EXPIRES = 3600  # 1 hour
