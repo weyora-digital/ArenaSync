@@ -67,6 +67,10 @@ def create_event():
 def register_event():
         data = request.get_json()
         event_id = data.get('event_id')
+        country = data.get('country')
+        phone_number = data.get('phone_number')
+        date_of_birth = data.get('date_of_birth')
+        gender = data.get('gender')
 
         # Get admin ID from JWT token
         user_id = get_jwt_identity()
@@ -77,7 +81,11 @@ def register_event():
         new_registration = EventRegistration(
             EventID=event_id,
             UserID=user_id,
-            RegistrationDate=datetime.utcnow()
+            RegisteredDate=datetime.utcnow(),
+            Country=country,
+            PhoneNumber=phone_number,
+            DateOfBirth=date_of_birth,
+            Gender=gender
         )
 
         if team_name is not None:
@@ -176,3 +184,20 @@ def update_event(event_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@event_blueprint.route('/registrations/<int:event_id>', methods=['GET'])
+def get_registration_count(event_id):
+    try:
+        # Query the database to count the number of registrations for the given event
+        registration_count = db.session.query(EventRegistration).filter_by(EventID=event_id).count()
+
+        # Return the count as JSON response
+        return jsonify({
+            'event_id': event_id,
+            'registration_count': registration_count
+        }), 200
+
+    except Exception as e:
+        # Handle any errors and return a response
+        return jsonify({
+            'error': str(e)
+        }), 500

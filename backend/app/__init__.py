@@ -26,9 +26,11 @@ def create_app():
         from .routes.user_routes import user_blueprint
         from .routes.admin_routes import admin_blueprint
         from .routes.event_routes import event_blueprint
+        from .routes.recommendation_routes import recommendation_blueprint  # Import recommendation routes
 
         app.register_blueprint(user_blueprint, url_prefix='/user')
         app.register_blueprint(admin_blueprint, url_prefix='/admin')
         app.register_blueprint(event_blueprint, url_prefix='/event')
+        app.register_blueprint(recommendation_blueprint, url_prefix='/recommendation')  # Register recommendation blueprint
 
     return app
