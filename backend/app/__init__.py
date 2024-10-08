@@ -1,9 +1,10 @@
 from flask import Flask
 from flask_cors import CORS
-
+from flask_migrate import Migrate
 from .config import Config
 from flask_jwt_extended import JWTManager
 from .utils.db import db
+from flask_sqlalchemy import SQLAlchemy
 
 
 def create_app():
@@ -17,6 +18,9 @@ def create_app():
     app.config['UPLOAD_FOLDER'] = 'D:/GitHub/Other Projects/ArenaSync/frontend/public/assets/event_img/'
 
     db.init_app(app)
+
+    migrate = Migrate(app, db)
+
     jwt = JWTManager(app)
 
     with app.app_context():
