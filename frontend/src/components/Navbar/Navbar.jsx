@@ -14,7 +14,7 @@ import {
   faDiscord,
 } from "@fortawesome/free-brands-svg-icons"; // Brand Icons
 
-const Navbar = () => {
+export default function Navbar() {
   const [isSignupModalOpen, setIsSignupModelOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModelOpen] = useState(false);
   const { auth, logout } = useAuthStore(); // Access Zustand store
@@ -43,10 +43,10 @@ const Navbar = () => {
   ];
 
   const navBarLink = [
-    { name: "HOME", link: "/user/home" },
-    { name: "EVENTS", link: "/events" },
-    { name: "ORGANIZATIONS & CLANS", link: "/organizations" },
-    { name: "CHALLENGES", link: "/challenges" },
+    { name: "HOME", link: "/" },
+    { name: "EVENTS", link: "#" },
+    { name: "ORGANIZATIONS & CLANS", link: "#" },
+    { name: "CHALLENGES", link: "#" },
   ];
 
   return (
@@ -141,6 +141,4 @@ const Navbar = () => {
       </nav>
     </header>
   );
-};
-
-export default Navbar;
+}

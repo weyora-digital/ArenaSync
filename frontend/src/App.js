@@ -17,7 +17,6 @@ import {
 } from "./middleware/auth";
 import AdminLogin from "./pages/Admin/AdminLogin/AdminLogin";
 import AdminDashboard from "./pages/Admin/Dashboard/Dashboard";
-import EventManager from "./pages/Admin/EventManager/EventManager";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -44,14 +43,6 @@ const router = createBrowserRouter(
           <ProtectedAdminRoute>
             {" "}
             <AdminDashboard />{" "}
-          </ProtectedAdminRoute>
-        }
-      />
-      <Route
-        path="/admin/events"
-        element={
-          <ProtectedAdminRoute>
-            <EventManager />
           </ProtectedAdminRoute>
         }
       />

@@ -15,7 +15,7 @@ export async function getUsername() {
 /** authenticate function */
 export async function authenticate(username) {
   try {
-    return await axios.post(`http://localhost:5001/api/authenticate`, {
+    return await axios.post(`http://localhost:5000/api/authenticate`, {
       username,
     });
   } catch (error) {
@@ -27,7 +27,7 @@ export async function authenticate(username) {
 export async function getUser({ username }) {
   try {
     const { data } = await axios.get(
-      `http://localhost:5001/api/user/${username}`
+      `http://localhost:5000/api/user/${username}`
     );
     return { data };
   } catch (error) {
@@ -40,7 +40,7 @@ export async function registerUser(credentials) {
   try {
     console.log(credentials);
     const response = await axios.post(
-      `http://127.0.0.1:5000/user/signup`,
+      `http://localhost:5000/user/signup`,
       credentials
     );
 
@@ -63,7 +63,7 @@ export async function registerUser(credentials) {
 export async function loginUser(credentials) {
   try {
     const response = await axios.post(
-      `http://127.0.0.1:5000/user/login`,
+      `http://localhost:5000/user/login`,
       credentials
     );
     return Promise.resolve(response.data);
@@ -76,7 +76,7 @@ export async function loginUser(credentials) {
 export async function verifyPassword({ username, password }) {
   try {
     if (username) {
-      const { data } = await axios.post(`http://localhost:5001/api/login`, {
+      const { data } = await axios.post(`http://localhost:5000/api/login`, {
         username,
         password,
       });
@@ -92,7 +92,7 @@ export async function updateUser(response) {
   try {
     const token = await localStorage.getItem("token");
     const data = await axios.put(
-      `http://localhost:5001/api/updateuser`,
+      `http://localhost:5000/api/updateuser`,
       response,
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -109,7 +109,7 @@ export async function generateOTP(username) {
     const {
       data: { code },
       status,
-    } = await axios.get(`http://localhost:5001/api/generateOTP`, {
+    } = await axios.get(`http://localhost:5000/api/generateOTP`, {
       params: { username },
     });
 
@@ -119,7 +119,7 @@ export async function generateOTP(username) {
         data: { email },
       } = await getUser({ username });
       let text = `Your Password Recovery OTP is ${code}. Verify and recover your password.`;
-      await axios.post(`http://localhost:5001/api/registerMail`, {
+      await axios.post(`http://localhost:5000/api/registerMail`, {
         username,
         userEmail: email,
         text,
@@ -136,7 +136,7 @@ export async function generateOTP(username) {
 export async function verifyOTP({ username, code }) {
   try {
     const { data, status } = await axios.get(
-      `http://localhost:5001/api/verifyOTP`,
+      `http://localhost:5000/api/verifyOTP`,
       { params: { username, code } }
     );
     return { data, status };
@@ -149,7 +149,7 @@ export async function verifyOTP({ username, code }) {
 export async function resetPassword({ username, password }) {
   try {
     const { data, status } = await axios.put(
-      `http://localhost:5001/api/resetPassword`,
+      `http://localhost:5000/api/resetPassword`,
       { username, password }
     );
     return Promise.resolve({ data, status });
@@ -160,7 +160,7 @@ export async function resetPassword({ username, password }) {
 
 export const fetchUpcomingEvents = async () => {
   try {
-    const response = await axios.get("http://127.0.0.1:5000/event/events");
+    const response = await axios.get("http://localhost:5000/event/events");
     return response.data.events;
   } catch (error) {
     throw error.response
@@ -169,6 +169,7 @@ export const fetchUpcomingEvents = async () => {
   }
 };
 
+/** fetch Country List */
 export const fetchCountries = async () => {
   try {
     const response = await axios.get(
@@ -182,5 +183,40 @@ export const fetchCountries = async () => {
     throw error.response
       ? error.response.data
       : { message: "Failed to fetch country list" };
+  }
+};
+
+/** fetch country flags */
+export const fetchCountryFlag = async (countryName) => {
+  try {
+    const response = await axios.get(
+      "https://restcountries.com/v3.1/all?fields=name,flags"
+    );
+
+    const country = response.data.find(
+      (c) => c.name.common.toLowerCase() === countryName.toLowerCase()
+    );
+
+    if (country) {
+      return country.flags.png;
+    } else {
+      throw new Error("Country not found");
+    }
+  } catch (error) {
+    throw error.response
+      ? error.response.data
+      : { message: "Failed to fetch country flag" };
+  }
+};
+
+/** fetch event registration count */
+export const fetchGameRegistrationCount = async (eventId) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/registrations/${eventId}`);
+    return response.data.events;
+  } catch (error) {
+    throw error.response
+      ? error.response.data
+      : { message: "Failed to fetch country flag" };
   }
 };

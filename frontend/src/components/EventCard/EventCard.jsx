@@ -1,31 +1,45 @@
 import React, { useEffect, useState } from "react";
 import { MdGroups } from "react-icons/md";
+import { fetchCountryFlag } from "../../helper/helper";
+import toast from "react-hot-toast";
 
 const EventCard = ({ event }) => {
   const [currentDate, setCurrentDate] = useState("");
+  const [countryFlag, setCountryFlag] = useState("");
 
   useEffect(() => {
     const today = new Date();
     const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed, so add 1
+    const month = String(today.getMonth() + 1).padStart(2, "0");
     const day = String(today.getDate()).padStart(2, "0");
 
     const formattedDate = `${year}-${month}-${day}`;
     setCurrentDate(formattedDate);
+
+    const fetchData = async () => {
+      try {
+        const [countryFlag] = await Promise.all([
+          fetchCountryFlag(event.country),
+        ]);
+        setCountryFlag(countryFlag);
+      } catch (error) {
+        toast.error("Failed to load data");
+      }
+    };
+
+    fetchData();
   }, []);
 
-  console.log(
-    currentDate,
-    event.registration_closing,
-    currentDate > event.registration_closing
-  );
+  const handleClicked = () => {
+    console.log("Clicked");
+  };
 
   return (
     <div className="bg-gray-700 w-80 rounded-lg shadow-sm shadow-gray-900 text-primary_text event-card">
       <img
         src={event.img_path}
         alt={event.gamename}
-        className="w-full h-48 object-cover rounded-t-md"
+        className="w-full h-48 object-cover rounded-t-md hover:opacity-80"
       />
       <div className="bg-name_background p-4">
         <h3 className="flex items-center justify-start text-xl h-8 font-bold mb-2">
@@ -38,7 +52,11 @@ const EventCard = ({ event }) => {
         </div>
         <div className="flex items-center bg-country_background h-5 p-4">
           <span className="flex font-normal justify-start">
-            {event.country}
+            <img
+              src={countryFlag}
+              style={{ width: "15x", height: "10px" }}
+              alt="Country Flag"
+            />
           </span>
         </div>
         <div className="flex flex-col bg-organizer_background border-r-2 px-4 justify-center h-20 border-name_background">
@@ -65,17 +83,35 @@ const EventCard = ({ event }) => {
         </div>
         <div className="flex items-center justify-center h-10 bg-name_background">
           <span
-            className={`text-xs font-bold text-event_text uppercase ${
+            className={`text-xs font-bold uppercase ${
               currentDate < event.registration_closing
-                ? "text-blue_text"
-                : currentDate < event.starting_date
-                ? "text-green_text"
-                : "Event Concluded"
+                ? "text-blue_text cursor-pointer"
+                : currentDate < event.end_date
+                ? "text-green_text cursor-default"
+                : "text-event_text cursor-default"
             }`}
+            style={
+              currentDate < event.registration_closing
+                ? {
+                    textShadow:
+                      "0 0 10px #234C63, 0 0 10px #234C63, 0 0 10px #234C63, 0 0 10px #234C63",
+                  }
+                : currentDate < event.end_date
+                ? {
+                    textShadow:
+                      "0 0 10px #2C4D09, 0 0 10px #2C4D09, 0 0 10px #2C4D09, 0 0 10px #2C4D09",
+                  }
+                : {}
+            }
+            onClick={
+              currentDate < event.registration_closing
+                ? handleClicked
+                : null
+            }
           >
             {currentDate < event.registration_closing
               ? "Register Now"
-              : currentDate < event.starting_date
+              : currentDate < event.end_date
               ? "Event Ongoing"
               : "Event Concluded"}
           </span>
