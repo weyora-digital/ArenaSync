@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from ..recommendation.neo4j_connection import get_connection
+from ..utils.neo4j_helper import Neo4jHelper
 
 import json
 from ..recommendation import game
@@ -20,20 +21,24 @@ def test():
 
 @recommendation_blueprint.route('/getGames')
 def get_data():
-    data = game.getGame(driver)
+    data = {'game_count': game.getGame()}
     response = jsonify(data)
     return response
 
 @recommendation_blueprint.route('/addgame', methods=['POST'])
-def add_game():
-    game_name = request.args.get('game', type=str)
-    genre = request.args.get('genre', type=str)
+def add_game_route():
+    data = request.get_json()
+
+    game_name = data.get('game')  
+    genre = data.get('genre')  
 
     if not game_name or not genre:
-        return jsonify({'error': 'missing parameter'}), 400
+        return jsonify({'error': 'Missing parameter'}), 400
 
-    new_game = game.add_game(driver, game_name, genre)
-    return jsonify(new_game)
+    new_game = game.add_game(game_name, genre)
+
+    return jsonify(new_game), 201  
+
 
 @recommendation_blueprint.route('/getRecommendation')
 def get_recommendation():
@@ -42,7 +47,7 @@ def get_recommendation():
     if not player_id:
         return jsonify({'error': 'invalid player id'}, 400)
 
-    recommendation = filtering.collaborative_filtering(driver, 1, 10, player_id)
+    recommendation = filtering.collaborative_filtering(1, 10, player_id)
     return jsonify(recommendation)
 
 @recommendation_blueprint.route('/matchmake')
@@ -53,7 +58,7 @@ def find_team():
     if player_id is None or num_players is None:
         return jsonify({"error":"Missing query parameters"}), 400
 
-    closest_players = match_make.find_closest_ranked_players(driver, player_id, num_players)
+    closest_players = match_make.find_closest_ranked_players(player_id, num_players)
     return jsonify(closest_players)
 
 @recommendation_blueprint.route('/addplayer', methods=['POST'])
@@ -65,7 +70,7 @@ def create_player():
     if not player_id or not first_name or not last_name:
         return jsonify({"error":"Missing player data"}), 400
 
-    new_player = player.add_player(driver, player_id, first_name, last_name)
+    new_player = player.add_player( player_id, first_name, last_name)
     return jsonify(new_player), 201
 
 @recommendation_blueprint.route('/addrelationship', methods=['POST'])
@@ -81,10 +86,10 @@ def add_relation():
     except ValueError:
         return jsonify({"error": "Invalid game IDs"}), 400
 
-    relationships = player.add_player_relationships(driver, player_id, games)
+    relationships = player.add_player_relationships( player_id, games)
     return jsonify(relationships), 201
 
 @recommendation_blueprint.route('/getallgames')
 def get_all_games():
-    games = get_games.get_all_games(driver)
+    games = get_games.get_all_games()
     return jsonify(games)
