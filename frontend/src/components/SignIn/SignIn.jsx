@@ -2,11 +2,12 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import toast, { Toaster } from "react-hot-toast";
-import { loginUser } from "../../helper/helper";  // Login API call
+import { loginUser } from "../../helper/helper"; // Login API call
 import { useAuthStore } from "../../store/store"; // Zustand store
 import logo from "../../assets/images/logo.png"; // Your logo
 
-export default function LoginForm({ isOpen, onClose, openSignupModal }) { // Add openSignupModal prop
+export default function LoginForm({ isOpen, onClose, openSignupModal }) {
+  // Add openSignupModal prop
   const navigate = useNavigate();
 
   // Zustand store functions
@@ -33,8 +34,9 @@ export default function LoginForm({ isOpen, onClose, openSignupModal }) { // Add
         // Store token in localStorage for persistence
         localStorage.setItem("token", access_token);
 
-        // Redirect to user home page
-        navigate("/");
+        // close signin popup
+        onClose();
+        // navigate("/");
         
       } catch (error) {
         // Handle error (e.g., show error message)
@@ -49,7 +51,7 @@ export default function LoginForm({ isOpen, onClose, openSignupModal }) { // Add
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <Toaster position="top-center" reverseOrder={false} />
-      
+
       <div className="bg-gray-800 p-8 rounded-lg shadow-lg text-primary_text w-full max-w-md relative">
         {/* Close Button */}
         <button
@@ -58,12 +60,12 @@ export default function LoginForm({ isOpen, onClose, openSignupModal }) { // Add
         >
           &times;
         </button>
-        
+
         <div className="flex justify-center mb-6">
           <img src={logo} alt="InGame Esports Logo" className="w-16" />
         </div>
         <h2 className="text-2xl text-center mb-6">Login to InGame eSports</h2>
-        
+
         <form className="space-y-4" onSubmit={formik.handleSubmit}>
           <input
             {...formik.getFieldProps("email")}
@@ -87,7 +89,7 @@ export default function LoginForm({ isOpen, onClose, openSignupModal }) { // Add
 
         <p className="text-center text-gray-400 mt-6">
           Don't have an account?{" "}
-          <span 
+          <span
             className="text-blue-500 hover:underline cursor-pointer"
             onClick={() => {
               onClose(); // Close the login modal

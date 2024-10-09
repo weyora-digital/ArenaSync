@@ -1,49 +1,78 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAdminStore } from '../../store/store'; // Zustand store for admin state
+import { FaRegUser } from "react-icons/fa";
+import {
+  MdOutlineEventNote,
+  MdOutlineSettings,
+  MdOutlineSpaceDashboard,
+} from "react-icons/md";
 
-const AdminSidebar = () => {
-  const navigate = useNavigate();
-  const logoutAdmin = useAdminStore((state) => state.logoutAdmin); // Logout action from Zustand
-
-  const handleLogout = () => {
-    logoutAdmin();
-    localStorage.removeItem('admin_token');
-    navigate('/admin/login');
-  };
-
+const AdminSidebar = ({ activeTab, handleClicking, width }) => {
   return (
-    <div className="admin-sidebar w-64 h-screen bg-gray-800 text-white flex flex-col p-4">
-      <h2 className="text-xl font-bold mb-4">Dashboard</h2>
-
-      {/* Navigation Links */}
-      <ul className="flex-grow">
+    <div
+      className={`pt-24 h-screen bg-organizer_background text-primary_text fixed left-0 top-0`}
+      style={{ width: `${width}px` }}
+    >
+      <ul>
         <li>
-          <Link to="/admin/dashboard" className="block py-2 px-4 hover:bg-gray-600">
+          <button
+            onClick={() => handleClicking(1)}
+            className={`pl-8 text-custom_textcolor w-full flex justify-start items-center rounded-none h-20 shadow-none ${
+              activeTab === 1
+                ? "bg-country_background"
+                : "bg-organizer_background"
+            }`}
+          >
+            <span className="mr-4 text-2xl">
+              <MdOutlineSpaceDashboard />
+            </span>
             Dashboard
-          </Link>
+          </button>
         </li>
         <li>
-          <Link to="/admin/events" className="block py-2 px-4 hover:bg-gray-600">
+          <button
+            onClick={() => handleClicking(2)}
+            className={`pl-8 text-custom_textcolor w-full flex justify-start items-center rounded-none h-20 shadow-none ${
+              activeTab === 2
+                ? "bg-country_background"
+                : "bg-organizer_background"
+            }`}
+          >
+            <span className="mr-4 text-2xl">
+              <MdOutlineEventNote />
+            </span>
             Manage Events
-          </Link>
+          </button>
         </li>
         <li>
-          <Link to="/admin/users" className="block py-2 px-4 hover:bg-gray-600">
+          <button
+            onClick={() => handleClicking(3)}
+            className={`pl-8 text-custom_textcolor w-full flex justify-start items-center rounded-none h-20 shadow-none ${
+              activeTab === 3
+                ? "bg-country_background"
+                : "bg-organizer_background"
+            }`}
+          >
+            <span className="mr-4 text-2xl">
+              <FaRegUser />
+            </span>
             Manage Users
-          </Link>
+          </button>
         </li>
         <li>
-          <Link to="/admin/settings" className="block py-2 px-4 hover:bg-gray-600">
+          <button
+            onClick={() => handleClicking(4)}
+            className={`pl-8 text-custom_textcolor w-full flex justify-start items-center rounded-none h-20 shadow-none ${
+              activeTab === 4
+                ? "bg-country_background"
+                : "bg-organizer_background"
+            }`}
+          >
+            <span className={`mr-4 text-2xl`}>
+              <MdOutlineSettings />
+            </span>
             Settings
-          </Link>
+          </button>
         </li>
       </ul>
-
-      {/* Logout Button */}
-      <button onClick={handleLogout} className="mt-auto bg-red-600 text-white py-2 w-full">
-        Logout
-      </button>
     </div>
   );
 };

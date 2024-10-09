@@ -1,13 +1,51 @@
-import React from 'react';
-import AdminSidebar from '../../../components/AdminSidebar/AdminSidebar';
+import React, { useState } from "react";
+import AdminSidebar from "../../../components/AdminSidebar/AdminSidebar";
+import AdminNavBar from "../../../components/AdminNavbar/AdminNavbar";
+import ManageEvents from "../../../components/ManageEvents/ManageEvents";
+import ManageUsers from "../../../components/ManageUsers/ManageUsers";
 
 const AdminDashboard = () => {
+  const [activeTab, setActiveTab] = useState(1);
+  const sidebarWidth = 250;
+  const handleClicking = (id) => {
+    setActiveTab(id);
+  };
+  const renderContent = () => {
+    switch (activeTab) {
+      case 1:
+        return <>Dashboard</>;
+      case 2:
+        return (
+          <>
+            <ManageEvents />
+          </>
+        );
+      case 3:
+        return (
+          <>
+            <ManageUsers />
+          </>
+        );
+      case 4:
+        return <>Settings</>;
+    }
+  };
   return (
-    <div className="admin-dashboard flex">
-      < AdminSidebar/>
-      <div className="p-6 flex-grow">
-        <h1 className="text-2xl font-bold mb-6">Welcome to Admin Dashboard</h1>
-        {/* Add more dashboard content here */}
+    <div className="bg-background w-screen h-screen overflow-x-hidden">
+      <AdminNavBar />
+      <AdminSidebar
+        activeTab={activeTab}
+        handleClicking={handleClicking}
+        width={sidebarWidth}
+      />
+      <div
+        className={`flex justify-center items-center mt-[100px] h-auto text-black `}
+        style={{
+          width: `calc(100vw - ${sidebarWidth}px)`,
+          marginLeft: `${sidebarWidth}px`,
+        }}
+      >
+        {renderContent()}
       </div>
     </div>
   );
