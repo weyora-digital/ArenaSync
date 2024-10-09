@@ -6,7 +6,13 @@ import { loginUser } from "../../helper/helper"; // Login API call
 import { useAuthStore } from "../../store/store"; // Zustand store
 import logo from "../../assets/images/logo.png"; // Your logo
 
-export default function LoginForm({ isOpen, onClose, openSignupModal }) {
+export default function LoginForm({
+  isOpen,
+  onClose,
+  openSignupModal,
+  challenges,
+  openEventRegistrationModal,
+}) {
   // Add openSignupModal prop
   const navigate = useNavigate();
 
@@ -35,9 +41,10 @@ export default function LoginForm({ isOpen, onClose, openSignupModal }) {
         localStorage.setItem("token", access_token);
 
         // close signin popup
-        onClose();
-        // navigate("/");
-        
+        if (challenges) {
+          onClose();
+          openEventRegistrationModal();
+        } else onClose();
       } catch (error) {
         // Handle error (e.g., show error message)
         toast.error("Login failed. Please check your credentials.");

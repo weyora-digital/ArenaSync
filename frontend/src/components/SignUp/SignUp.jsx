@@ -11,7 +11,13 @@ import { registerUser } from "../../helper/helper";
 import { useAuthStore } from "../../store/store";
 import logo from "../../assets/images/logo.png";
 
-export default function SignupForm({ isOpen, onClose, openLoginModal }) {
+export default function SignupForm({
+  isOpen,
+  onClose,
+  openLoginModal,
+  challenges,
+  openEventRegistrationModal,
+}) {
   const navigate = useNavigate();
   const [file, setFile] = useState();
 
@@ -29,27 +35,29 @@ export default function SignupForm({ isOpen, onClose, openLoginModal }) {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async (values) => {
-      console.log("hello")
-      values = await Object.assign(values, { profile: file || "" });
+      console.log("hello");
+      values = Object.assign(values, { profile: file || "" });
       console.log(values);
       try {
-        console.log("hello")
+        console.log("hello");
         const response = await registerUser(values);
-  
+
         console.log(response);
         // Assuming the API returns the token and username upon successful signup
         const { access_token, username } = response;
-  
+
         // Store token and username in Zustand store
         setToken(access_token);
         setUsername(username);
-  
+
         // Store token in localStorage for persistence
         localStorage.setItem("token", access_token);
-  
+
         // Redirect to user home page
-        navigate("/user/home");
-        
+        if (challenges) {
+          onClose();
+          openEventRegistrationModal();
+        } else onClose();
       } catch (error) {
         // Handle error (e.g., show error message)
         toast.error("Registration failed. Please try again.");
@@ -171,7 +179,7 @@ export default function SignupForm({ isOpen, onClose, openLoginModal }) {
         {/* Bottom Link */}
         <p className="text-center text-gray-400 mt-6">
           Already have an account?{" "}
-          <span 
+          <span
             className="text-blue-500 hover:underline cursor-pointer"
             onClick={() => {
               onClose(); // Close the login modal
