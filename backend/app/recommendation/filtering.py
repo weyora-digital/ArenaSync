@@ -1,5 +1,7 @@
+from flask import current_app
 
-def collaborative_filtering(driver, neighbourhood_size, num_recos, player_id):
+
+def collaborative_filtering(neighbourhood_size, num_recos, player_id):
     
     query = """
             //Get pairs of players and their count of distinct games they have playes
@@ -30,10 +32,20 @@ def collaborative_filtering(driver, neighbourhood_size, num_recos, player_id):
             RETURN p1.playerId as player, COLLECT({gameId:g.gameId, game: g.game})[0..$num_recos] as recos
             """
     
+    neo4j_helper = current_app.neo4j_helper
+
     recos = {}
-    with driver.session() as session:
-        for row in session.run(query, neighbourhood_size=neighbourhood_size, num_recos=num_recos, player_id=player_id):
-            recos['recommendation'] = row["recos"]
-            recos['player_id'] = row['player']
+    
+    result = neo4j_helper.query(query, parameters={
+        'neighbourhood_size': neighbourhood_size,
+        'num_recos': num_recos,
+        'player_id': player_id
+    })
+    
+    # Extract results from the query response
+    if result:
+        row = result[0]
+        recos['recommendation'] = row["recos"]
+        recos['player_id'] = row['player']
 
     return recos

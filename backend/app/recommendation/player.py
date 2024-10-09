@@ -1,24 +1,35 @@
-def add_player(driver, player_id, first_name, last_name):
+from flask import current_app
+
+def add_player(player_id, first_name, last_name):
     query = """
     CREATE (p:Player {playerId: $playerId, firstName: $firstName, lastName: $lastName})
     RETURN p
     """
     
-    with driver.session() as session:
-        result = session.run(query, playerId=player_id, firstName=first_name, lastName=last_name)
-        for record in result:
-             rec = record["p"]
-             
-             new_player = {
-                "playerId": rec['playerId'],
-                "firstName": rec['firstName'],
-                "lastName": rec['lastName']
-                }
-             
-             return new_player
+    neo4j_helper = current_app.neo4j_helper  # Access neo4j_helper from the app context
+
+    # Run the query to add the player
+    result = neo4j_helper.query(query, parameters={
+        'playerId': player_id,
+        'firstName': first_name,
+        'lastName': last_name
+    })
+
+    # Extract the result and return the new player info
+    if result:
+        rec = result[0]['p']
+        new_player = {
+            "playerId": rec['playerId'],
+            "firstName": rec['firstName'],
+            "lastName": rec['lastName']
+        }
+        return new_player
+    else:
+        return None  # Handle case where no player is created
+
         
     
-def add_player_relationships(driver, player_id, games):
+def add_player_relationships(player_id, games):
     query = """
     MATCH (p:Player {playerId: $playerId})
     UNWIND $games AS game
@@ -31,19 +42,28 @@ def add_player_relationships(driver, player_id, games):
     RETURN p, r, g
     """
 
-    relationships = []
-    
-    with driver.session() as session:
-        result = session.run(query, playerId=player_id, games=games)
-        print(result)
-        for record in result:
-            player_node = record['p']
-            relationship = record['r']
-            game_node = record['g']
-            print(player_node)
-            relationships.append({
-                "playerID": player_node['playerId']
-            })
-            break
+    neo4j_helper = current_app.neo4j_helper  # Access neo4j_helper from the app context
 
-        return relationships
+    relationships = []
+
+    # Run the query to add player relationships with the provided games
+    result = neo4j_helper.query(query, parameters={'playerId': player_id, 'games': games})
+
+    # Process the result and build the relationships list
+    for record in result:
+        player_node = record['p']
+        relationship = record['r']
+        game_node = record['g']
+
+        relationships.append({
+            "playerID": player_node['playerId'],
+            "gameId": game_node['gameId'],
+            "relationship": {
+                "hoursPlayed": relationship['hoursPlayed'],
+                "recommendation": relationship['recommendation'],
+                "status": relationship['status'],
+                "ranking": relationship['ranking']
+            }
+        })
+
+    return relationships
