@@ -52,6 +52,7 @@ export default function SignupForm({
 
         // Store token in localStorage for persistence
         localStorage.setItem("token", access_token);
+        localStorage.setItem("username", username);
 
         // Redirect to user home page
         if (challenges) {
