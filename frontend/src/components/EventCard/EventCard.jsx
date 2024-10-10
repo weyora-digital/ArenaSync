@@ -1,11 +1,43 @@
 import React, { useEffect, useState } from "react";
 import { MdGroups } from "react-icons/md";
-import { fetchCountryFlag } from "../../helper/helper";
+import {
+  fetchCountryFlag,
+  fetchGameRegistrationCount,
+} from "../../helper/helper";
 import toast from "react-hot-toast";
+import SignupForm from "../SignUp/SignUp";
+import LoginForm from "../SignIn/SignIn";
+import { useAuthStore } from "../../store/store";
+import RegisterEvent from "../RegisterEvent/RegisterEvent";
 
 const EventCard = ({ event }) => {
   const [currentDate, setCurrentDate] = useState("");
   const [countryFlag, setCountryFlag] = useState("");
+  const [registrationCount, setRegistrationCount] = useState(0);
+  const [isSignupModalOpen, setIsSignupModelOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModelOpen] = useState(false);
+  const [isEventModalOpen, setIsEventModelOpen] = useState(false);
+  const { auth } = useAuthStore();
+
+  const openSignupModal = () => setIsSignupModelOpen(true);
+  const closeSignupModal = () => setIsSignupModelOpen(false);
+
+  const openLoginModal = () => setIsLoginModelOpen(true);
+  const closeLoginModal = () => setIsLoginModelOpen(false);
+
+  const openEventRegistrationModal = () => setIsEventModelOpen(true);
+  const closeEventRegistrationModal = () => setIsEventModelOpen(false);
+
+  const fetchRegistrationCount = async () => {
+    try {
+      const [registrationCount] = await Promise.all([
+        fetchGameRegistrationCount(event.eventid),
+      ]);
+      setRegistrationCount(registrationCount);
+    } catch (error) {
+      toast.error("Failed to load data");
+    }
+  };
 
   useEffect(() => {
     const today = new Date();
@@ -22,16 +54,26 @@ const EventCard = ({ event }) => {
           fetchCountryFlag(event.country),
         ]);
         setCountryFlag(countryFlag);
+        return countryFlag;
       } catch (error) {
-        toast.error("Failed to load data");
+        toast.error("Failed to country list");
       }
     };
-
     fetchData();
+    fetchRegistrationCount();
   }, []);
 
+  const handleAuthSuccess = () => {
+    setIsSignupModelOpen(false); // Close signup/login modal
+    setIsEventModelOpen(true); // Open event modal
+  };
+
   const handleClicked = () => {
-    console.log("Clicked");
+    if (!auth.active) {
+      openSignupModal(); // Open signup modal if not authenticated
+    } else {
+      setIsEventModelOpen(true); // Open event modal if authenticated
+    }
   };
 
   return (
@@ -54,7 +96,7 @@ const EventCard = ({ event }) => {
           <span className="flex font-normal justify-start">
             <img
               src={countryFlag}
-              style={{ width: "15x", height: "10px" }}
+              style={{ width: "15px", height: "10px" }}
               alt="Country Flag"
             />
           </span>
@@ -72,13 +114,13 @@ const EventCard = ({ event }) => {
           <span className="font-normal">{event.starting_date}</span>
         </div>
         <div className="flex flex-col bg-country_background px-4 justify-center h-16">
-          <span className="text-event_text mr-2">StartingTime:</span>
+          <span className="text-event_text mr-2">Starting Time:</span>
           <span className="font-normal">{event.starting_time}</span>
         </div>
         <div className="flex flex-row items-center h-10 bg-name_background px-4">
           <MdGroups className="text-event_text" />
           <span className="ml-2 text-event_text text-xs">
-            {event.registration_count} Gamers registered
+            {registrationCount} Gamers registered
           </span>
         </div>
         <div className="flex items-center justify-center h-10 bg-name_background">
@@ -104,9 +146,7 @@ const EventCard = ({ event }) => {
                 : {}
             }
             onClick={
-              currentDate < event.registration_closing
-                ? handleClicked
-                : null
+              currentDate < event.registration_closing ? handleClicked : null
             }
           >
             {currentDate < event.registration_closing
@@ -117,6 +157,32 @@ const EventCard = ({ event }) => {
           </span>
         </div>
       </div>
+      <SignupForm
+        isOpen={isSignupModalOpen}
+        onClose={closeSignupModal}
+        onAuthSuccess={handleAuthSuccess}
+        openLoginModal={openLoginModal}
+        challenges={true}
+        openEventRegistrationModal={openEventRegistrationModal}
+      />
+
+      <LoginForm
+        isOpen={isLoginModalOpen}
+        onClose={closeLoginModal}
+        onAuthSuccess={handleAuthSuccess}
+        openSignupModal={openSignupModal}
+        challenges={true}
+        openEventRegistrationModal={openEventRegistrationModal}
+      />
+
+      {isEventModalOpen && (
+        <RegisterEvent
+          isOpen={isEventModalOpen}
+          onClose={closeEventRegistrationModal}
+          eventid={event.eventid}
+          fetchData={fetchRegistrationCount}
+        />
+      )}
     </div>
   );
 };

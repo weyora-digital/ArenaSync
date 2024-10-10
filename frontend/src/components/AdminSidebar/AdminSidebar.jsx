@@ -59,7 +59,7 @@ const AdminSidebar = ({ activeTab, handleClicking, width }) => {
         </li>
         <li>
           <button
-            onClick={() => handleClicking(4)}
+            // onClick={() => handleClicking(4)}
             className={`pl-8 text-custom_textcolor w-full flex justify-start items-center rounded-none h-20 shadow-none ${
               activeTab === 4
                 ? "bg-country_background"

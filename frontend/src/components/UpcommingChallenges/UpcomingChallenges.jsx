@@ -149,26 +149,3 @@ const UpcomingChallenges = () => {
 };
 
 export default UpcomingChallenges;
-
-{
-  /* <div
-        className="flex overflow-x-auto scrollbar-hide cursor-grab"
-        ref={scrollRef}
-        onMouseDown={handleMouseDown}
-      >
-        <div className="flex space-x-5">
-          {filteredEvents.length ? (
-            filteredEvents.map((event) => (
-              <div
-                key={event.eventid}
-                className="min-w-[calc(100%/2)] md:min-w-[calc(100%/2)] lg:min-w-[calc(100%/4.65)]"
-              >
-                <EventCard event={event} />
-              </div>
-            ))
-          ) : (
-            <p className="text-gray-500">No Challenges Available</p>
-          )}
-        </div>
-      </div> */
-}

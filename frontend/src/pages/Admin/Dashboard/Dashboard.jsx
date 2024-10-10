@@ -26,8 +26,8 @@ const AdminDashboard = () => {
             <ManageUsers />
           </>
         );
-      case 4:
-        return <>Settings</>;
+      default:
+        return false;
     }
   };
   return (

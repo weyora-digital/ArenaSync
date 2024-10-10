@@ -1,19 +1,37 @@
 import React, { useEffect, useState } from "react";
+import { IoSearch } from "react-icons/io5";
 import PaginationButton from "../PaginationButton/PaginationButton";
+import useFilterSearch from "../../helper/useFilterSearch";
 
 function TableRenderProp({
   handleClick,
-  events,
   tableHeading,
   render,
-  totalElements,
   heading,
   buttonName,
+  fetchEvents,
+  url,
+  pageType,
+  events,
+  totalElements,
   currentPage,
   setCurrentPage,
 }) {
-  const [data, setData] = useState([]);
-  const [perPageCount, setPerPageCount] = useState("10");
+  const {
+    handleChange,
+    data,
+    setSearch,
+    setPerPageCount,
+    perPageCount
+  } = useFilterSearch(
+    url,
+    pageType,
+    fetchEvents,
+    events,
+    currentPage,
+    setCurrentPage
+  );
+
   const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
@@ -22,13 +40,6 @@ function TableRenderProp({
     setTotalPages(pages);
     setCurrentPage(0);
   }, [events, perPageCount]);
-
-  useEffect(() => {
-    const perPage = Number(perPageCount);
-    const startIndex = currentPage * perPage;
-    const paginatedData = events.slice(startIndex, startIndex + perPage);
-    setData(paginatedData);
-  }, [currentPage, perPageCount, events]);
 
   return (
     <section className="flex flex-col mx-10 mt-16">
@@ -52,7 +63,21 @@ function TableRenderProp({
         </div>
 
         <div className="flex justify-center items-center">
-          <div className="bg-organizer_background rounded py-3 px-4 font-bold text-primary_text">
+          <span className="pr-2 text-base">Search:</span>
+          <input
+            type="text"
+            name="search"
+            id="search"
+            onChange={(e) => setSearch(e.target.value)}
+            className="rounded-xl border border-organizer_background py-2 px-4"
+          />
+          <div
+            className="mx-2 p-3 hover:text-name_background border bg-organizer_background text-primary_text hover:bg-background rounded-full hover:border-name_background border-[#F1E3E0]"
+            onClick={handleChange}
+          >
+            <IoSearch />
+          </div>
+          <div className="ml-3 bg-organizer_background rounded py-2 px-4 font-bold text-primary_text">
             <button
               className="flex justify-center items-center space-x-3"
               onClick={handleClick}

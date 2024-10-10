@@ -1,10 +1,17 @@
 import { ClipLoader } from "react-spinners";
 import Clock from "../Clock/Clock";
 import Logo from "../../assets/images/logo.png";
+import { LuLogOut } from "react-icons/lu";
 import { useState } from "react";
 
 export default function AdminNavBar() {
   const [loading, setLoading] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("admin_token");
+    localStorage.removeItem("refresh_token");
+    window.location.href = '/admin/login'
+  };
 
   return (
     <div className="w-screen">
@@ -17,8 +24,8 @@ export default function AdminNavBar() {
         </p>
 
         <button
-          //   onClick={handleLogout}
-          className="hover:border-custom_red text-custom_red bg-background_gray w-[105px] h-[48px] py-2 px-3 rounded-md hover:text-primary_text text-xl hover:bg-custom_red float-end flex items-center justify-center"
+          onClick={handleLogout}
+          className="hover:border-custom_red text-custom_red bg-background_gray w-28 h-12 rounded-md hover:text-primary_text text-xl hover:bg-custom_red float-end flex justify-center items-center"
           to={""}
         >
           {loading ? (
@@ -29,7 +36,10 @@ export default function AdminNavBar() {
               loading={loading}
             />
           ) : (
-            <span>Logout</span>
+            <div className="flex justify-center items-center space-x-1">
+              <LuLogOut className="text-2xl mt-1" />
+              <span>Logout</span>
+            </div>
           )}
         </button>
       </div>

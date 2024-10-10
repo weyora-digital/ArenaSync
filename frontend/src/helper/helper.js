@@ -158,7 +158,7 @@ export async function resetPassword({ username, password }) {
   }
 }
 
-export const fetchUpcomingEvents = async () => {
+export async function fetchUpcomingEvents() {
   try {
     const response = await axios.get("http://localhost:5000/event/events");
     return response.data.events;
@@ -167,10 +167,22 @@ export const fetchUpcomingEvents = async () => {
       ? error.response.data
       : { message: "Failed to fetch events" };
   }
-};
+}
+
+/** fetch events */
+export async function fetchEvent(url) {
+  try {
+    const response = await axios.get(url);
+    return response.data.events;
+  } catch (error) {
+    throw error.response
+      ? error.response.data
+      : { message: "Failed to fetch events" };
+  }
+}
 
 /** fetch Country List */
-export const fetchCountries = async () => {
+export async function fetchCountries() {
   try {
     const response = await axios.get(
       "https://restcountries.com/v3.1/all?fields=name,flags"
@@ -184,10 +196,10 @@ export const fetchCountries = async () => {
       ? error.response.data
       : { message: "Failed to fetch country list" };
   }
-};
+}
 
 /** fetch country flags */
-export const fetchCountryFlag = async (countryName) => {
+export async function fetchCountryFlag(countryName) {
   try {
     const response = await axios.get(
       "https://restcountries.com/v3.1/all?fields=name,flags"
@@ -207,16 +219,39 @@ export const fetchCountryFlag = async (countryName) => {
       ? error.response.data
       : { message: "Failed to fetch country flag" };
   }
-};
+}
 
 /** fetch event registration count */
-export const fetchGameRegistrationCount = async (eventId) => {
+export async function fetchGameRegistrationCount(eventId) {
   try {
-    const response = await axios.get(`http://localhost:5000/registrations/${eventId}`);
-    return response.data.events;
+    const response = await axios.get(
+      `http://localhost:5000/event/registrations/${eventId}`
+    );
+    return response.data.registration_count;
   } catch (error) {
     throw error.response
       ? error.response.data
       : { message: "Failed to fetch country flag" };
   }
-};
+}
+
+/** event registration */
+export async function registerTournament(values) {
+  const token = localStorage.getItem("token");
+  try {
+    const response = await axios.post(
+      `http://localhost:5000/event/register_event`,
+      values,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.status;
+  } catch (error) {
+    throw error.response
+      ? error.response.data
+      : { message: "Failed to fetch country flag" };
+  }
+}

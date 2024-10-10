@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { fetchAdminEvents, deleteEvent } from "../../helper/adminhelper"; // Import helper functions
 import TableRenderProp from "../RenderProp/TableRenderProp";
 import toast from "react-hot-toast";
@@ -32,10 +32,6 @@ const ManageEvents = () => {
   const handleClick = () => {
     setPopUpAddEvent(!popUpAddEvent);
   };
-
-  useEffect(() => {
-    fetchEvents();
-  }, []);
 
   const tableHeading = [
     "Events Id",
@@ -106,13 +102,16 @@ const ManageEvents = () => {
   return (
     <div>
       <TableRenderProp
-        events={events}
         tableHeading={tableHeading}
         render={renderRows}
-        totalElements={totalElements}
         handleClick={handleClick}
         heading={"Event Details"}
         buttonName={"New Event"}
+        url={"http://localhost:5000/event/events"}
+        pageType={"Upcoming Challenges"}
+        fetchEvents={fetchEvents}
+        events={events}
+        totalElements={totalElements}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
       />

@@ -3,17 +3,13 @@ import {
   createRoutesFromElements,
   RouterProvider,
   Route,
-  Link,
 } from "react-router-dom";
 
-import Home from "./pages/User/Home/Home";
 // import SignUp from './components/SignUp/SignUp';
 // import SignIn from './components/SignIn/SignIn'
 import Index from "./pages/Index/Index";
 import {
-  AuthorizeUser,
   ProtectedAdminRoute,
-  ProtectRoute,
 } from "./middleware/auth";
 import AdminLogin from "./pages/Admin/AdminLogin/AdminLogin";
 import AdminDashboard from "./pages/Admin/Dashboard/Dashboard";
@@ -28,14 +24,7 @@ const router = createBrowserRouter(
       {/* <Route path="/reset" element={<Reset />} /> */}
       {/* <Route path="/recovery" element={<Recovery />} /> */}
       {/* <Route path="/pagenotfound" element={<PageNotFound />} /> */}
-      <Route
-        path="/user/home"
-        element={
-          <AuthorizeUser>
-            <Home />
-          </AuthorizeUser>
-        }
-      />
+
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route
         path="/admin/dashboard"
