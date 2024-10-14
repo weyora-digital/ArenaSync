@@ -16,7 +16,7 @@ def create_app():
     app.config.from_object(Config)
 
     # Set the path to store uploaded files (event images)
-    app.config['UPLOAD_FOLDER'] = 'D:/GitHub/Other Projects/ArenaSync/frontend/public/assets/event_img/'
+    app.config['UPLOAD_FOLDER'] = '/Users/vihidun/MyFolder/Development/ArenaSync/backend/asserts/event_img'
 
     db.init_app(app)
 

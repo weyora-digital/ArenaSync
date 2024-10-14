@@ -76,10 +76,12 @@ const EventCard = ({ event }) => {
     }
   };
 
+  const imageUrl = `http://127.0.0.1:5000/event/image/${event.eventid}`;
+
   return (
     <div className="bg-gray-700 w-80 rounded-lg shadow-sm shadow-gray-900 text-primary_text event-card">
       <img
-        src={event.img_path}
+        src={imageUrl}
         alt={event.gamename}
         className="w-full h-48 object-cover rounded-t-md hover:opacity-80"
       />
