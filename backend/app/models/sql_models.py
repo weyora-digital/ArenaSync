@@ -1,5 +1,6 @@
-from . import db
+from .. import db
 from datetime import datetime
+from sqlalchemy.dialects.postgresql import JSONB
 
 class Admin(db.Model):
     __tablename__ = 'adminuser'
@@ -31,6 +32,7 @@ class Event(db.Model):
 
     eventid = db.Column(db.Integer, primary_key=True)
     gamename = db.Column(db.String(255), nullable=False)
+    game_names = db.Column(JSONB)
     country = db.Column(db.String(100), nullable=False)
     organizer = db.Column(db.String(100), nullable=False)
     adminid = db.Column(db.Integer, db.ForeignKey('adminuser.adminid'), nullable=False)

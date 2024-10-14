@@ -1,4 +1,5 @@
 from flask import current_app
+from neomodel import db
 
 
 def collaborative_filtering(neighbourhood_size, num_recos, player_id):
@@ -32,20 +33,21 @@ def collaborative_filtering(neighbourhood_size, num_recos, player_id):
             RETURN p1.playerId as player, COLLECT({gameId:g.gameId, game: g.game})[0..$num_recos] as recos
             """
     
-    neo4j_helper = current_app.neo4j_helper
+    # neo4j_helper = current_app.neo4j_helper
 
-    recos = {}
-    
-    result = neo4j_helper.query(query, parameters={
+    # Run the Cypher query using `neomodel`'s db.cypher_query
+    result, meta = db.cypher_query(query, {
         'neighbourhood_size': neighbourhood_size,
         'num_recos': num_recos,
         'player_id': player_id
     })
     
-    # Extract results from the query response
+    recos = {}
+    
+    # Extract the results and process them
     if result:
         row = result[0]
-        recos['recommendation'] = row["recos"]
-        recos['player_id'] = row['player']
-
+        recos['player_id'] = row[0]  # p1.playerId
+        recos['recommendation'] = row[1]  # Recommendation list from the selected neighbours
+    
     return recos

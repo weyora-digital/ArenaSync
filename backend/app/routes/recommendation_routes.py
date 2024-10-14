@@ -64,13 +64,13 @@ def find_team():
 @recommendation_blueprint.route('/addplayer', methods=['POST'])
 def create_player():
     player_id = request.args.get('player_id', type=int)
-    first_name = request.args.get('first_name', type=str)
-    last_name = request.args.get('last_name', type=str)
+    # first_name = request.args.get('first_name', type=str)
+    # last_name = request.args.get('last_name', type=str)
 
-    if not player_id or not first_name or not last_name:
+    if not player_id:
         return jsonify({"error":"Missing player data"}), 400
 
-    new_player = player.add_player( player_id, first_name, last_name)
+    new_player = player.add_player(player_id)
     return jsonify(new_player), 201
 
 @recommendation_blueprint.route('/addrelationship', methods=['POST'])

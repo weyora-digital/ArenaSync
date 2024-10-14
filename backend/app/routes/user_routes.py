@@ -1,9 +1,10 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from ..utils.db import db
-from ..models import Player, Team 
+from ..models.sql_models import Player, Team 
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 from flask_cors import cross_origin
+import requests
 
 user_blueprint = Blueprint('user', __name__)
 
@@ -37,6 +38,20 @@ def signup_user():
     
     db.session.add(new_user)
     db.session.commit()
+
+    # Now call the Neo4j API to create the player in Neo4j using the new player's ID
+    neo4j_url = f"http://127.0.0.1:5000/recommendation/addplayer?player_id={new_user.userid}"
+    
+    try:
+        response = requests.post(neo4j_url)
+        if response.status_code != 201:
+            # Handle the case where the Neo4j API returns an error
+            return jsonify({'message': f'Error creating player in Neo4j: {response.text}'}), response.status_code
+    except requests.exceptions.RequestException as e:
+        # Catch any errors that occur during the request to the Neo4j API
+        return jsonify({'message': f'Failed to communicate with Neo4j API: {str(e)}'}), 500
+
+
     # Auto-login: generate access and refresh tokens
     additional_claims = {'role': 'user'}
     access_token = create_access_token(identity=new_user.userid, additional_claims=additional_claims)
