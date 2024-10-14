@@ -5,6 +5,7 @@ from .config import Config
 from flask_jwt_extended import JWTManager
 from .utils.db import db
 from flask_sqlalchemy import SQLAlchemy
+from neomodel import config 
 # from .utils.neo4j_helper import Neo4jHelper
 import os
 
@@ -14,6 +15,14 @@ def create_app():
     CORS(app)
 
     app.config.from_object(Config)
+
+    neo4j_uri = app.config['NEO4J_URI']
+    neo4j_user = app.config['NEO4J_USER']
+    neo4j_password = app.config['NEO4J_PASSWORD']
+    neo4j_database = os.getenv('NEO4J_DATABASE', 'arenasync')  # Default to 'my_database'
+    print(f'bolt://{neo4j_user}:{neo4j_password}@{neo4j_uri}/{neo4j_database}')
+    config.DATABASE_URL = f'bolt://{neo4j_user}:{neo4j_password}@{neo4j_uri}/{neo4j_database}'
+
 
     # Set the path to store uploaded files (event images)
     app.config['UPLOAD_FOLDER'] = '/Users/vihidun/MyFolder/Development/ArenaSync/backend/asserts/event_img'
@@ -33,7 +42,7 @@ def create_app():
     # neo4j_helper = Neo4jHelper(neo4j_uri, neo4j_user, neo4j_password)
 
     with app.app_context():
-        from .models import Admin, Player, Event, EventRegistration
+        from .models.sql_models import Admin, Player, Event, EventRegistration
         db.create_all()  # Create database tables for our data models
 
         from .routes.user_routes import user_blueprint

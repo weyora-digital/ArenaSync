@@ -1,37 +1,25 @@
 from flask import current_app
+from ..models.neo_models import Player, Game
 
-def getGame():
-    query = "MATCH (g:Game) RETURN count(g)"
-    neo4j_helper = current_app.neo4j_helper
-    result = neo4j_helper.query(query)
-    return result[0]['count(g)']
+def get_all_games():
+    games = Game.nodes.all()
+    return [{"gameId": g.gameId, "gameName": g.game} for g in games]
+
 
     
 def get_next_game_id():
-    query = """
-    MATCH (g:Game)
-    RETURN MAX(g.gameId) AS maxId
-    """
-    neo4j_helper = current_app.neo4j_helper
-    result = neo4j_helper.query(query)
-    max_id = result.single().get("maxId")
-    return (max_id or 0) + 1
+    max_game = Game.nodes.order_by('-gameId').first()
+    return (max_game.gameId if max_game else 0) + 1
 
 def add_game(game_name, genre):
-    query = """
-    CREATE (g:Game {gameId: $gameId, game: $gameName, genre: $genre})
-    RETURN g
-    """
-    
-    
     game_id = get_next_game_id()
-    neo4j_helper = current_app.neo4j_helper
-    
-    result = neo4j_helper.query(query, gameId=game_id, gameName=game_name, genre=genre)
-    
-    game_node = result[0]['g']
+
+    # Create and save the game node
+    game = Game(gameId=game_id, game=game_name, genre=genre)
+    game.save()
+
     return {
-        "gameId": game_node["gameId"],
-        "game": game_node["game"],
-        "genre": game_node["genre"]
+        "gameId": game.gameId,
+        "game": game.game,
+        "genre": game.genre
     }

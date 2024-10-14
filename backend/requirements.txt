@@ -22,3 +22,4 @@ colorama==0.4.6
 neo4j==5.21.0
 pytz==2024.1
 Flask_Migrate==4.0.7
+neomodel==5.3.3

@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from ..utils.db import db
-from ..models import Admin
+from ..models.sql_models import Admin
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 
 admin_blueprint = Blueprint('admin', __name__)

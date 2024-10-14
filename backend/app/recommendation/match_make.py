@@ -1,4 +1,5 @@
 from flask import current_app
+from neomodel import db
 
 def find_closest_ranked_players(player_id, num_players):
     query = """
@@ -16,7 +17,7 @@ def find_closest_ranked_players(player_id, num_players):
     closest_players = []
     
     # Run the query using neo4j_helper and pass parameters
-    result = neo4j_helper.query(query, parameters={'playerId': player_id, 'numPlayers': num_players})
+    result = db.cypher_query(query, parameters={'playerId': player_id, 'numPlayers': num_players})
     
     # Process the result and build the closest players list
     for record in result:
