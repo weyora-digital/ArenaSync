@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, send_from_directory
 from ..utils.db import db
 from ..models import Event, EventRegistration, Team
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -15,6 +15,24 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@event_blueprint.route('/image/<int:event_id>', methods=['GET'])
+def serve_image_by_event_id(event_id):
+
+    # Query the event table for the img_path based on event_id
+    event = Event.query.filter_by(eventid=event_id).one()
+
+    # Get the img_path from the event (assumes img_path stores only the filename)
+    img_path = event.image_path
+    print(img_path)
+    print(current_app.config['UPLOAD_FOLDER'])
+
+    if img_path:
+        # Serve the image from the UPLOAD_FOLDER
+        return send_from_directory(current_app.config['UPLOAD_FOLDER'], img_path)
+    else:
+        return jsonify({"error": "Image path not found for this event"}), 404
+
 
 @event_blueprint.route('/create', methods=['POST'])
 @admin_required
@@ -52,7 +70,7 @@ def create_event():
                 starting_time=data['startingTime'],
                 end_time=data['endTime'],
                 registration_closing=data['registrationClosing'],
-                image_path=image_path,  # Save the file path in the database
+                image_path=filename,  # Save the file path in the database
                 adminid=admin_id
             )
 
@@ -61,6 +79,8 @@ def create_event():
             return jsonify({"message": "Event created successfully", "eventId": event.eventid}), 201
         except Exception as e:
             return jsonify({"error": str(e)}), 500
+        
+
         
 @event_blueprint.route('/register_event', methods=['POST'])
 @user_required

@@ -47,9 +47,13 @@ def login_admin():
 @admin_blueprint.route('/verify/admin', methods=['GET'])
 @jwt_required()
 def verify_admin():
-    admin_id = get_jwt_identity()
-    admin = Admin.query.filter_by(adminid=admin_id).first()
-    if admin:
-        return jsonify({'message': 'Admin verified', 'admin_id': admin_id}), 200
-    else:
-        return jsonify({'message': 'Admin not verified'}), 401
+    try:
+        admin_id = get_jwt_identity()
+        admin = Admin.query.filter_by(adminid=admin_id).first()
+        
+        if admin:
+            return jsonify({'isValid': True, 'message': 'Admin verified', 'admin_id': admin_id}), 200
+        else:
+            return jsonify({'isValid': False, 'message': 'Admin not found'}), 404
+    except Exception as e:
+        return jsonify({'isValid': False, 'message': 'Token validation failed', 'error': str(e)}), 401
