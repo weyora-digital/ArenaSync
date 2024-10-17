@@ -1,6 +1,7 @@
+import json
 from flask import Blueprint, request, jsonify, send_from_directory
 from ..utils.db import db
-from ..models import Event, EventRegistration, Team
+from ..models.sql_models import Event, EventRegistration, Team
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import requests
 from ..decoraters import admin_required, user_required
@@ -60,6 +61,11 @@ def create_event():
             else:
                 image_path = None  # Handle no file case
 
+            
+            # Parse the game names from the JSON string
+            game_names_str = data.get('game_names')
+            game_names = json.loads(game_names_str) if game_names_str else []  # Convert JSON string to a Python list
+            
             event = Event(
                 gamename=data['gamename'],
                 country=data['country'],
@@ -71,7 +77,8 @@ def create_event():
                 end_time=data['endTime'],
                 registration_closing=data['registrationClosing'],
                 image_path=filename,  # Save the file path in the database
-                adminid=admin_id
+                adminid=admin_id,
+                game_names = game_names
             )
 
             db.session.add(event)
