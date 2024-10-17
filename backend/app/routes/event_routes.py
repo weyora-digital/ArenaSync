@@ -9,6 +9,7 @@ from datetime import datetime
 from werkzeug.utils import secure_filename
 import os
 from flask import current_app
+from sqlalchemy import or_
 
 event_blueprint = Blueprint('event', __name__)
 
@@ -228,3 +229,50 @@ def get_registration_count(event_id):
         return jsonify({
             'error': str(e)
         }), 500
+    
+@event_blueprint.route('/eventsbygames', methods=['GET'])
+def get_events_by_game_names():
+    # Get the JSON data from the request body
+    data = request.get_json()
+
+    if not data or 'game_names' not in data:
+        return jsonify({'message': 'Missing game names in request body'}), 400
+
+    # Extract the game names from the JSON body
+    game_names = data['game_names']
+
+    if not isinstance(game_names, list) or not game_names:
+        return jsonify({'message': 'game_names must be a non-empty list'}), 400
+
+    try:
+        # Create filters to check if any game name in the provided list is contained in the event's game_names column
+        filters = [Event.game_names.op('@>')(f'["{game_name}"]') for game_name in game_names]
+
+        # Query the database with combined filters
+        events = Event.query.filter(or_(*filters)).all()
+
+        if not events:
+            return jsonify({'message': 'No events found for the provided game names'}), 404
+
+        # Prepare the response
+        events_data = [
+            {
+                'eventid': event.eventid,
+                'gamename': event.gamename,
+                'country': event.country,
+                'organizer': event.organizer,
+                'location': event.location,
+                'starting_date': event.starting_date.strftime('%Y-%m-%d'),
+                'end_date': event.end_date.strftime('%Y-%m-%d'),
+                'starting_time': event.starting_time.strftime('%H:%M:%S'),
+                'end_time': event.end_time.strftime('%H:%M:%S'),
+                'registration_closing': event.registration_closing.strftime('%Y-%m-%d'),
+                'adminid': event.adminid,
+                'img_path': event.image_path
+            }
+            for event in events
+        ]
+
+        return jsonify({'events': events_data}), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
