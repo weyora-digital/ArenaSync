@@ -19,11 +19,11 @@ def test():
     response = 'successful!'
     return response
 
-@recommendation_blueprint.route('/getGames')
-def get_data():
-    data = {'game_count': game.getGame()}
-    response = jsonify(data)
-    return response
+# @recommendation_blueprint.route('/getGames')
+# def get_data():
+#     data = {'game_count': game.getGame()}
+#     response = jsonify(data)
+#     return response
 
 @recommendation_blueprint.route('/addgame', methods=['POST'])
 def add_game_route():
