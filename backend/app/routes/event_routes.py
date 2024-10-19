@@ -148,7 +148,8 @@ def get_events():
                 'end_time': event.end_time.strftime('%H:%M:%S'),
                 'registration_closing': event.registration_closing.strftime('%Y-%m-%d'),
                 'adminid': event.adminid,
-                'img_path': event.image_path
+                'img_path': event.image_path,
+                'game_names': event.game_names
             }
             event_list.append(event_data)
 
