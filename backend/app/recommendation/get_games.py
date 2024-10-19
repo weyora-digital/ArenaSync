@@ -11,7 +11,8 @@ def get_all_games():
     for game in games:
         game_list.append({
             "gameId": game.gameId,
-            "gameName": game.game
+            "gameName": game.game,
+            "genre": game.genre
         })
     
     return game_list

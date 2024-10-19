@@ -4,7 +4,7 @@ from neomodel.exceptions import DoesNotExist
 
 def get_all_games():
     games = Game.nodes.all()
-    return [{"gameId": g.gameId, "gameName": g.game} for g in games]
+    return [{"gameId": g.gameId, "gameName": g.game, "genre":g.genre} for g in games]
 
 
     
