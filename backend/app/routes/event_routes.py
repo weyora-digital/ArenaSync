@@ -181,19 +181,45 @@ def delete_event(event_id):
         return jsonify({'error': str(e)}), 500
     
 @event_blueprint.route('/update/<int:event_id>', methods=['PUT'])
-@admin_required
+# @admin_required
 def update_event(event_id):
-    if not request.is_json:
-        return jsonify({"msg": "Missing JSON in request"}), 400
+    if not request.is_json and 'file' not in request.files:
+        return jsonify({"msg": "Missing JSON or Image in request"}), 400
 
-    data = request.get_json()
-    
+    data = request.form  # This will get the other data when using multipart/form-data
+    file = request.files.get('file')  # Use .get() to avoid KeyError
+
+    # Get admin ID from JWT token
+    # admin_id = get_jwt_identity()
+
     try:
         # Get the event by ID
         event = Event.query.get(event_id)
 
         if not event:
             return jsonify({"message": "Event not found"}), 404
+
+        # Save the new file if provided
+        if file:
+            # Delete the old image if it exists
+            if event.image_path:
+                try:
+                    image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], event.image_path)
+                    os.remove(image_path)  # Remove the old image
+                except Exception as e:
+                    return jsonify({"error": f"Failed to delete old image: {str(e)}"}), 500
+
+            # Save the new image
+            filename = secure_filename(file.filename)
+            image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            file.save(image_path)
+            event.image_path = filename  # Update event image path
+        else:
+            image_path = event.image_path  # Retain the existing image if no new image is provided
+
+        # Parse the game names from the JSON string
+        game_names_str = data.get('game_names')
+        game_names = json.loads(game_names_str) if game_names_str else event.game_names  # Retain existing game names if not updated
 
         # Update the event details with the provided data
         event.gamename = data.get('gamename', event.gamename)
@@ -205,6 +231,7 @@ def update_event(event_id):
         event.starting_time = datetime.strptime(data.get('startingTime', event.starting_time.strftime('%H:%M:%S')), '%H:%M:%S').time()
         event.end_time = datetime.strptime(data.get('endTime', event.end_time.strftime('%H:%M:%S')), '%H:%M:%S').time()
         event.registration_closing = datetime.strptime(data.get('registrationClosing', event.registration_closing.strftime('%Y-%m-%d')), '%Y-%m-%d')
+        event.game_names = game_names
 
         db.session.commit()
 
