@@ -66,7 +66,7 @@ export default function Navbar() {
           ))}
         </div>
         <span className="navbar-welcome text-secondary_text text-sm">
-          Welcome to InGame eSports Platform!
+          Welcome to ArenaSync eSports Platform!
         </span>
       </div>
 

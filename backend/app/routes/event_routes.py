@@ -258,7 +258,7 @@ def get_registration_count(event_id):
             'error': str(e)
         }), 500
     
-@event_blueprint.route('/eventsbygames', methods=['GET'])
+@event_blueprint.route('/eventsbygames', methods=['POST'])
 def get_events_by_game_names():
     # Get the JSON data from the request body
     data = request.get_json()
