@@ -10,16 +10,17 @@ import convertToBase64 from "../../helper/convert";
 import { registerUser } from "../../helper/helper";
 import { useAuthStore } from "../../store/store";
 import logo from "../../assets/images/logo.png";
+import ClipLoading from "../ClipLoading/ClipLoading";
 
 export default function SignupForm({
   isOpen,
   onClose,
   openLoginModal,
-  challenges,
-  openEventRegistrationModal,
+  openSignUpRecommendationModel,
+  setUserId,
 }) {
-  const navigate = useNavigate();
   const [file, setFile] = useState();
+  const [loading, setLoading] = useState(false);
 
   const setUsername = useAuthStore((state) => state.setUsername); // Access Zustand state
   const setToken = useAuthStore((state) => state.setToken); // Access Zustand state
@@ -35,16 +36,13 @@ export default function SignupForm({
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async (values) => {
-      console.log("hello");
       values = Object.assign(values, { profile: file || "" });
-      console.log(values);
+      setLoading(true);
       try {
-        console.log("hello");
         const response = await registerUser(values);
 
-        console.log(response);
         // Assuming the API returns the token and username upon successful signup
-        const { access_token, username } = response;
+        const { access_token, username, user_id } = response;
 
         // Store token and username in Zustand store
         setToken(access_token);
@@ -54,11 +52,10 @@ export default function SignupForm({
         localStorage.setItem("token", access_token);
         localStorage.setItem("username", username);
 
-        // Redirect to user home page
-        if (challenges) {
-          onClose();
-          openEventRegistrationModal();
-        } else onClose();
+        setUserId(user_id);
+        setLoading(false);
+        onClose();
+        openSignUpRecommendationModel();
       } catch (error) {
         // Handle error (e.g., show error message)
         toast.error("Registration failed. Please try again.");
@@ -67,10 +64,10 @@ export default function SignupForm({
   });
 
   // File upload handler
-  const onUpload = async (e) => {
-    const base64 = await convertToBase64(e.target.files[0]);
-    setFile(base64);
-  };
+  // const onUpload = async (e) => {
+  //   const base64 = await convertToBase64(e.target.files[0]);
+  //   setFile(base64);
+  // };
 
   // Render nothing if modal is not open
   if (!isOpen) return null;
@@ -102,16 +99,16 @@ export default function SignupForm({
         <p className="text-center text-gray-400 mb-8">
           Enter your personal details to experience your eSport Portal.
         </p>
-        <div className="relative flex justify-center mb-4">
-          {/* Avatar */}
-          <label htmlFor="profile">
+        {/* <div className="relative flex justify-center mb-4"> */}
+        {/* Avatar */}
+        {/* <label htmlFor="profile">
             <img
               src={file || avatar}
               className="w-20 h-20 rounded-full object-cover cursor-pointer"
               alt="avatar"
-            />
-            {/* Camera Icon Overlay */}
-            <div className="absolute inset-0 flex items-center justify-center text-gray-300">
+            /> */}
+        {/* Camera Icon Overlay */}
+        {/* <div className="absolute inset-0 flex items-center justify-center text-gray-300">
               <FontAwesomeIcon icon={faCamera} className="w-6 h-6" />
             </div>
           </label>
@@ -122,7 +119,7 @@ export default function SignupForm({
             name="profile"
             className="hidden"
           />
-        </div>
+        </div> */}
         {/* Form */}
         <form className="space-y-4" onSubmit={formik.handleSubmit}>
           {/* <div className="profile flex justify-center py-4">
@@ -151,10 +148,11 @@ export default function SignupForm({
             className="w-full p-3 bg-gray-700 rounded-md text-gray-300"
           />
           <button
-            className="w-full bg-blue-600 p-3 rounded-md hover:bg-blue-700"
+            className="w-full bg-blue-600 p-3 rounded-md hover:bg-blue-700 h-12"
             type="submit"
+            disabled={loading}
           >
-            Register
+            {loading ? <ClipLoading size={25} color={"#fff"} /> : "Register"}
           </button>
         </form>
 
@@ -183,9 +181,10 @@ export default function SignupForm({
           <span
             className="text-blue-500 hover:underline cursor-pointer"
             onClick={() => {
-              onClose(); // Close the login modal
-              openLoginModal(); // Open the signup modal
+              !loading && onClose(); // Close the login modal
+              !loading && openLoginModal(); // Open the signup modal
             }}
+            disabled={loading}
           >
             Log In
           </span>

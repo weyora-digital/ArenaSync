@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchUpcomingEvents } from "../../helper/helper";
+import { fetchRecommandedEvents } from "../../helper/helper";
 import EventCard from "../EventCard/EventCard";
 import { Toaster, toast } from "react-hot-toast";
 import { useRef } from "react";
@@ -29,14 +29,19 @@ const RecommandedChallenges = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [fetchedEvents] = await Promise.all([fetchUpcomingEvents()]);
-        setEvents(fetchedEvents);
+        const [fetchedEvents] = await Promise.all([fetchRecommandedEvents()]);
+        if (fetchedEvents != "No events to fetch") {
+          setEvents(fetchedEvents);
+        }
       } catch (error) {
-        toast.error("Failed to load data");
+        console.log(error);
+        toast.error("Failed to fetch data");
       }
     };
 
-    fetchData();
+    if (auth.active) {
+      fetchData();
+    }
   }, []);
 
   // Optionally, filter events by selectedGame and selectedCountry

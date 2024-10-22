@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import AdminSidebar from "../../../components/AdminSidebar/AdminSidebar";
 import AdminNavBar from "../../../components/AdminNavbar/AdminNavbar";
 import ManageEvents from "../../../components/ManageEvents/ManageEvents";
-import ManageUsers from "../../../components/ManageUsers/ManageUsers";
+import ManageGames from "../../../components/ManageGames/ManageGames";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState(1);
@@ -23,7 +23,7 @@ const AdminDashboard = () => {
       case 3:
         return (
           <>
-            <ManageUsers />
+            <ManageGames />
           </>
         );
       default:

@@ -13,14 +13,23 @@ import {
   faTwitch,
   faDiscord,
 } from "@fortawesome/free-brands-svg-icons"; // Brand Icons
+import SignUpRecommendationForm from "../SignUpRecommendation/SignUpRecommendation";
 
 export default function Navbar() {
   const [isSignupModalOpen, setIsSignupModelOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModelOpen] = useState(false);
+  const [isSignUpRecommendationModalOpen, setIsSignUpRecommendationOpen] =
+    useState(false);
+  const [userId, setUserId] = useState(0);
   const { auth, logout } = useAuthStore(); // Access Zustand store
 
   const openSignupModal = () => setIsSignupModelOpen(true);
   const closeSignupModal = () => setIsSignupModelOpen(false);
+
+  const openSignUpRecommendationModel = () =>
+    setIsSignUpRecommendationOpen(true);
+  const closeSignUpRecommendationModel = () =>
+    setIsSignUpRecommendationOpen(false);
 
   const openLoginModal = () => setIsLoginModelOpen(true);
   const closeLoginModal = () => setIsLoginModelOpen(false);
@@ -129,14 +138,23 @@ export default function Navbar() {
           isOpen={isSignupModalOpen}
           onClose={closeSignupModal}
           openLoginModal={openLoginModal}
-        />{" "}
+          registrationForm={true}
+          openSignUpRecommendationModel={openSignUpRecommendationModel}
+          setUserId={setUserId}
+        />
         {/* Pass openLoginModal */}
         {/* Login Modal */}
         <LoginForm
           isOpen={isLoginModalOpen}
           onClose={closeLoginModal}
           openSignupModal={openSignupModal}
-        />{" "}
+        />
+        {isSignUpRecommendationModalOpen && (
+          <SignUpRecommendationForm
+            onClose={closeSignUpRecommendationModel}
+            userId={userId}
+          />
+        )}
         {/* Pass openSignupModal */}
       </nav>
     </header>
