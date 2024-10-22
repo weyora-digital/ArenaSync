@@ -183,8 +183,8 @@ def delete_event(event_id):
 @event_blueprint.route('/update/<int:event_id>', methods=['PUT'])
 # @admin_required
 def update_event(event_id):
-    if not request.is_json and 'file' not in request.files:
-        return jsonify({"msg": "Missing JSON or Image in request"}), 400
+    # if not request.is_json and 'file' not in request.files:
+    #     return jsonify({"msg": "Missing JSON or Image in request"}), 400
 
     data = request.form  # This will get the other data when using multipart/form-data
     file = request.files.get('file')  # Use .get() to avoid KeyError
