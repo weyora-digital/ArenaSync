@@ -4,9 +4,9 @@ import TableRenderProp from "../RenderProp/TableRenderProp";
 import toast from "react-hot-toast";
 import { MdOutlineEdit } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import AddEvent from "../AddEvent/AddEvent";
+import AddGame from "../AddGame/AddGame";
 
-const ManageEvents = () => {
+const ManageGames = () => {
   const [events, setEvents] = useState([]);
   const [totalElements, setTotalElements] = useState(0);
   const [popUpAddEvent, setPopUpAddEvent] = useState(false);
@@ -41,14 +41,11 @@ const ManageEvents = () => {
     "Organizer",
     "Admin Id",
     "Location",
-    <>
-      Start Date <br /> Time
-    </>,
-    <>
-      End Date <br /> Time
-    </>,
+    "Start Date",
+    "End Date",
+    "Start Time",
+    "End Time",
     "Registration Closing Date",
-    "Game Names",
     "Action",
   ];
 
@@ -76,7 +73,7 @@ const ManageEvents = () => {
     return event.map((item, index) => (
       <div
         key={index}
-        className={`grid grid-cols-11 h-16 items-center border-b-2 border-b-secondary_text text-sm`}
+        className="grid grid-cols-12 h-16 items-center border-b-2 border-b-secondary_text text-sm"
       >
         <p className="text-center">{item.eventid}</p>
         <p className="text-center">{item.gamename}</p>
@@ -84,14 +81,11 @@ const ManageEvents = () => {
         <p className="text-center">{item.organizer}</p>
         <p className="text-center">{item.adminid}</p>
         <p className="text-center">{item.location}</p>
-        <p className="text-center">
-          {item.starting_date} <br /> {item.starting_time}
-        </p>
-        <p className="text-center">
-          {item.end_date} <br /> {item.end_time}
-        </p>
+        <p className="text-center">{item.starting_date}</p>
+        <p className="text-center">{item.end_date}</p>
+        <p className="text-center">{item.starting_time}</p>
+        <p className="text-center">{item.end_time}</p>
         <p className="text-center">{item.registration_closing}</p>
-        <p className="text-center">{item.game_names.join(" , ")}</p>
         <div className="justify-center flex gap-5">
           <MdOutlineEdit
             className="text-xl text-[#E1BE43] cursor-pointer"
@@ -112,8 +106,8 @@ const ManageEvents = () => {
         tableHeading={tableHeading}
         render={renderRows}
         handleClick={handleClick}
-        heading={"Event Details"}
-        buttonName={"New Event"}
+        heading={"Game Details"}
+        buttonName={"New Game"}
         url={"http://127.0.0.1:5000/event/events"}
         pageType={"Upcoming Challenges"}
         fetchEvents={fetchEvents}
@@ -123,7 +117,7 @@ const ManageEvents = () => {
         setCurrentPage={setCurrentPage}
       />
       {popUpAddEvent && (
-        <AddEvent
+        <AddGame
           onClose={handleClick}
           editEvent={editEvent}
           item={item}
@@ -135,4 +129,4 @@ const ManageEvents = () => {
   );
 };
 
-export default ManageEvents;
+export default ManageGames;

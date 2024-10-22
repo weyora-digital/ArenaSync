@@ -1,4 +1,4 @@
-import { FaRegUser } from "react-icons/fa";
+import { IoGameControllerOutline } from "react-icons/io5";
 import {
   MdOutlineEventNote,
   MdOutlineSettings,
@@ -52,9 +52,9 @@ const AdminSidebar = ({ activeTab, handleClicking, width }) => {
             }`}
           >
             <span className="mr-4 text-2xl">
-              <FaRegUser />
+              <IoGameControllerOutline />
             </span>
-            Manage Users
+            Manage Games
           </button>
         </li>
         <li>

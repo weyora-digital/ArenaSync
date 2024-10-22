@@ -158,6 +158,32 @@ export async function resetPassword({ username, password }) {
   }
 }
 
+/** add favorite games */
+export async function addFavoriteGames(list) {
+  const { player_id, games } = list;
+  console.log(games);
+  try {
+    // Convert games array to a comma-separated string
+    const gamesString = games.join(",");
+
+    const response = await axios.post(
+      `http://127.0.0.1:5000/recommendation/addrelationship`,
+      null,
+      {
+        params: {
+          player_id: player_id,
+          games: gamesString, // Send comma-separated string
+        },
+      }
+    );
+    return Promise.resolve({ response });
+  } catch (error) {
+    console.log(error);
+    return Promise.reject({ error });
+  }
+}
+
+/** fetch UpComing Events */
 export async function fetchUpcomingEvents() {
   try {
     const response = await axios.get("http://127.0.0.1:5000/event/events");
@@ -169,7 +195,51 @@ export async function fetchUpcomingEvents() {
   }
 }
 
-/** fetch events */
+/** fetch Recommanded Events */
+export async function fetchRecommandedEvents() {
+  const token = localStorage.getItem("token");
+  let decode = jwtDecode(token);
+  const player_id = decode.sub;
+  try {
+    const response = await axios.get(
+      "http://127.0.0.1:5000/recommendation/getRecommendation",
+      {
+        params: {
+          player_id: player_id,
+        },
+      }
+    );
+    if (response.data.recommendation == null) {
+      return "No events to fetch";
+    }
+    const recommendations = response.data.recommendation;
+    const gameNames = recommendations.map((item) => item.game);
+    const result = {
+      game_names: gameNames,
+    };
+    console.log(result);
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:5000/event/eventsbygames",
+        result
+      );
+      console.log("aecond error", response);
+      return response.data.events;
+    } catch (error) {
+      console.log(error);
+      throw error.response
+        ? error.response.data
+        : { message: "Failed to fetch events" };
+    }
+  } catch (error) {
+    console.log("first error", error);
+    throw error.response
+      ? error.response.data
+      : { message: "Failed to fetch events" };
+  }
+}
+
+/** fetch Events */
 export async function fetchEvent(url) {
   try {
     const response = await axios.get(url);
@@ -178,6 +248,20 @@ export async function fetchEvent(url) {
     throw error.response
       ? error.response.data
       : { message: "Failed to fetch events" };
+  }
+}
+
+/** fetch All Games */
+export async function fetchAllGames() {
+  try {
+    const response = await axios.get(
+      "http://127.0.0.1:5000/recommendation/getallgames"
+    );
+    return response;
+  } catch (error) {
+    throw error.response
+      ? error.response.data
+      : { message: "Failed to fetch country list" };
   }
 }
 

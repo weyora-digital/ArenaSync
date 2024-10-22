@@ -9,8 +9,6 @@ const PaginationButton = ({ totalPages, currentPage, setCurrentPage }) => {
   const showNextButton = currentPage !== totalPages - 1;
   const showPrevButton = currentPage !== 0;
 
-  console.log(currentPage);
-
   return (
     <div>
       <ReactPaginate

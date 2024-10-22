@@ -17,20 +17,15 @@ function TableRenderProp({
   currentPage,
   setCurrentPage,
 }) {
-  const {
-    handleChange,
-    data,
-    setSearch,
-    setPerPageCount,
-    perPageCount
-  } = useFilterSearch(
-    url,
-    pageType,
-    fetchEvents,
-    events,
-    currentPage,
-    setCurrentPage
-  );
+  const { handleChange, data, setSearch, setPerPageCount, perPageCount } =
+    useFilterSearch(
+      url,
+      pageType,
+      fetchEvents,
+      events,
+      currentPage,
+      setCurrentPage
+    );
 
   const [totalPages, setTotalPages] = useState(0);
 
