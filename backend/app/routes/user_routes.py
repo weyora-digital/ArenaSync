@@ -40,10 +40,11 @@ def signup_user():
     db.session.commit()
 
     # Now call the Neo4j API to create the player in Neo4j using the new player's ID
-    neo4j_url = f"http://127.0.0.1:5002/recommendation/addplayer?player_id={new_user.userid}"
-    
+    neo4j_url = f"http://127.0.0.1:5000/recommendation/addplayer?player_id={new_user.userid}"
+    response = requests.post(neo4j_url)
+    print(response)
     try:
-        response = requests.post(neo4j_url)
+        
         if response.status_code != 201:
             # Handle the case where the Neo4j API returns an error
             return jsonify({'message': f'Error creating player in Neo4j: {response.text}'}), response.status_code
