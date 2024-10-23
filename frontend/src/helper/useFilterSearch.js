@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 function useFilterSearch(
-  path,
   page,
   fetchEvents,
   events,
@@ -13,10 +12,6 @@ function useFilterSearch(
   const [perPageCount, setPerPageCount] = useState("10");
 
   useEffect(() => {
-    fetchEvents();
-  }, [path, perPageCount]);
-
-  useEffect(() => {
     const perPage =
       perPageCount === "10" ? 10 : perPageCount === "20" ? 20 : 30;
     const startIndex = currentPage * perPage;
@@ -26,21 +21,34 @@ function useFilterSearch(
 
   useEffect(() => {
     setCurrentPage(0);
+    fetchEvents();
   }, [perPageCount]);
 
   const handleChange = () => {
     const newData = events.filter((oneData) => {
       switch (page) {
-        case "Upcoming Challenges":
+        case "Manage Events":
           return (
-            oneData.gamename.toString().includes(search) ||
+            oneData.gamename
+              .toString()
+              .toLowerCase()
+              .includes(search.toLowerCase()) ||
             oneData.eventid.toString().includes(search) ||
-            oneData.country.toString().includes(search) ||
-            oneData.location.toString().includes(search)
+            oneData.country
+              .toString()
+              .toLowerCase()
+              .includes(search.toLowerCase()) ||
+            oneData.location
+              .toString()
+              .toLowerCase()
+              .includes(search.toLowerCase())
           );
-        case "Challenges":
+
+        case "Manage Games":
           return (
-            oneData.productName.includes(search) || oneData._id.includes(search)
+            oneData.gameName.toString().includes(search.toLowerCase()) ||
+            oneData.genre.toString().includes(search.toLowerCase()) ||
+            oneData.gameId === parseInt(search)
           );
         default:
           return false;

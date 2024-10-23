@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { fetchUpcomingEvents, fetchCountries } from "../../helper/helper";
+import { fetchGames } from "../../helper/adminhelper";
 import EventCard from "../EventCard/EventCard";
 import { Toaster, toast } from "react-hot-toast";
 import { useRef } from "react";
@@ -9,8 +10,9 @@ const UpcomingChallenges = () => {
   const [events, setEvents] = useState([]);
   const [selectedGame, setSelectedGame] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
-  const games = ["Apex Legends", "Call of Duty", "Fortnite"];
+  const [games, setGames] = useState([]);
   const [countryList, setCountryList] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const scrollContainerRef = useRef(null);
 
@@ -31,12 +33,17 @@ const UpcomingChallenges = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [fetchedCountries, fetchedEvents] = await Promise.all([
-          fetchCountries(),
-          fetchUpcomingEvents(),
-        ]);
+        const [fetchedCountries, fetchedEvents, fetchGamesList] =
+          await Promise.all([
+            fetchCountries(),
+            fetchUpcomingEvents(),
+            fetchGames(),
+          ]);
+        console.log(fetchGamesList);
         setCountryList(fetchedCountries);
         setEvents(fetchedEvents);
+        setGames(fetchGamesList);
+        setLoading(true);
       } catch (error) {
         toast.error("Failed to load data");
       }
@@ -48,8 +55,12 @@ const UpcomingChallenges = () => {
   // Optionally, filter events by selectedGame and selectedCountry
   const filteredEvents = events.filter((event) => {
     return (
-      (selectedGame ? event.gamename === selectedGame : true) &&
-      (selectedCountry ? event.country === selectedCountry : true)
+      (selectedGame
+        ? event.game_names
+            .join(" ")
+            .toLowerCase()
+            .includes(selectedGame.toLowerCase())
+        : true) && (selectedCountry ? event.country === selectedCountry : true)
     );
   });
 
@@ -69,9 +80,9 @@ const UpcomingChallenges = () => {
         </div>
 
         {/* Filters Row */}
-        <div className="flex justify-start w-full md:justify-end items-center mb-6">
+        <div className="flex justify-start w-full md:w-1/2 md:justify-end items-center mb-6 space-x-5">
           {/* Game Filter */}
-          <div className="w-full md:w-1/4 mr-4">
+          <div className="w-full">
             <select
               className="w-full p-2 bg-gray-800 text-gray-300 border border-gray-700 rounded-md"
               value={selectedGame}
@@ -79,16 +90,17 @@ const UpcomingChallenges = () => {
               aria-label="Filter by Game"
             >
               <option value="">Filter by Game</option>
-              {games.map((game) => (
-                <option key={game} value={game}>
-                  {game}
-                </option>
-              ))}
+              {loading &&
+                games.map((game) => (
+                  <option key={game.gameId} value={game.gameName}>
+                    {game.gameName}
+                  </option>
+                ))}
             </select>
           </div>
 
           {/* Country Filter */}
-          <div className="w-full md:w-1/4">
+          <div className="w-full">
             <select
               className="w-full p-2 bg-gray-800 text-gray-300 border border-gray-700 rounded-md"
               value={selectedCountry}

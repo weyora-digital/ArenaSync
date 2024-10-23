@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IoSearch } from "react-icons/io5";
 import PaginationButton from "../PaginationButton/PaginationButton";
 import useFilterSearch from "../../helper/useFilterSearch";
+import ClipLoading from "../ClipLoading/ClipLoading";
 
 function TableRenderProp({
   handleClick,
@@ -10,22 +11,15 @@ function TableRenderProp({
   heading,
   buttonName,
   fetchEvents,
-  url,
-  pageType,
+  page,
   events,
   totalElements,
   currentPage,
   setCurrentPage,
+  loading,
 }) {
   const { handleChange, data, setSearch, setPerPageCount, perPageCount } =
-    useFilterSearch(
-      url,
-      pageType,
-      fetchEvents,
-      events,
-      currentPage,
-      setCurrentPage
-    );
+    useFilterSearch(page, fetchEvents, events, currentPage, setCurrentPage);
 
   const [totalPages, setTotalPages] = useState(0);
 
@@ -37,7 +31,11 @@ function TableRenderProp({
   }, [events, perPageCount]);
 
   return (
-    <section className="flex flex-col mx-10 mt-16">
+    <section
+      className={`flex flex-col justify-center mx-10 mt-16 ${
+        page == "Manage Games" ? "min-w-[1080px]" : ""
+      }`}
+    >
       <div className="flex items-center justify-between">
         <div>
           <span className="text-[24px] font-[600px]">{heading}</span>
@@ -95,7 +93,13 @@ function TableRenderProp({
             ))}
           </div>
         )}
-        {data.length > 0 && render(data)}
+        {loading ? (
+          <div className="flex pt-48 justify-center items-center">
+            <ClipLoading />
+          </div>
+        ) : (
+          data.length > 0 && render(data)
+        )}
       </div>
 
       <div className="flex justify-between p-3">

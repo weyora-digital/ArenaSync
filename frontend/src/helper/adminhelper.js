@@ -12,7 +12,7 @@ export async function adminLogin(credentials) {
     const { data, status } = response;
 
     if (status === 200) {
-      return Promise.resolve(data); // Return the login response data if successful
+      return Promise.resolve(data);
     }
   } catch (error) {
     return Promise.reject({
@@ -21,7 +21,7 @@ export async function adminLogin(credentials) {
   }
 }
 
-// Function to create a new event (Admin only)
+/** Create a new event */
 export const createAdminEvent = async (eventData, token) => {
   console.log(eventData);
   try {
@@ -30,7 +30,7 @@ export const createAdminEvent = async (eventData, token) => {
       eventData,
       {
         headers: {
-          Authorization: `Bearer ${token}`, // Admin token for authorization
+          Authorization: `Bearer ${token}`,
           // "Content-Type": "application/json", // Ensure JSON content type
         },
       }
@@ -49,20 +49,25 @@ export const createAdminEvent = async (eventData, token) => {
 export const fetchAdminEvents = async () => {
   try {
     const response = await axios.get("http://127.0.0.1:5000/event/events");
-    return response.data.events;
+
+    const sortedEvents = response.data.events.sort(
+      (a, b) => a.eventid - b.eventid
+    );
+
+    return sortedEvents;
   } catch (error) {
     throw error;
   }
 };
 
-// Function to delete an event (Admin only)
+/** Delete an event */
 export const deleteEvent = async (eventId, token) => {
   try {
     const response = await axios.delete(
       `http://127.0.0.1:5000/event/delete/${eventId}`,
       {
         headers: {
-          Authorization: `Bearer ${token}`, // Admin token for authorization
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -74,7 +79,7 @@ export const deleteEvent = async (eventId, token) => {
   }
 };
 
-// Function to update an event (Admin only)
+/** Update an event */
 export const updateEvent = async (eventId, updatedEventData, token) => {
   try {
     const response = await axios.put(
@@ -95,26 +100,88 @@ export const updateEvent = async (eventId, updatedEventData, token) => {
   }
 };
 
-/** Function to create a new game (Admin only) */
+/** Create a new game */
 export const createAdminGame = async (eventData, token) => {
-  console.log(eventData);
   try {
     const response = await axios.post(
       "http://127.0.0.1:5000/recommendation/addgame",
-      eventData
-      // {
-      //   headers: {
-      //     Authorization: `Bearer ${token}`, // Admin token for authorization
-      //     // 'Content-Type': 'application/json'  // Ensure JSON content type
-      //   },
-      // }
+      eventData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
-    console.log(response);
     return response.data;
   } catch (error) {
-    console.log(error);
     throw error.response
       ? error.response.data
-      : { message: "Event creation failed" };
+      : { message: "Game creation failed" };
+  }
+};
+
+/** Fetch games */
+export const fetchGames = async () => {
+  try {
+    const response = await axios.get(
+      "http://127.0.0.1:5000/recommendation/getallgames"
+    );
+    const sortedEvents = response.data.sort((a, b) => a.gameId - b.gameId);
+    return sortedEvents;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/** Delete a game */
+export const deleteGame = async (gameId, token) => {
+  try {
+    const response = await axios.delete(
+      `http://127.0.0.1:5000/recommendation/deletegame/${gameId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response
+      ? error.response.data
+      : { message: "Game deletion failed" };
+  }
+};
+
+/** Update a game */
+export const updateGame = async (gameId, updatedGameData, token) => {
+  try {
+    const response = await axios.put(
+      `http://127.0.0.1:5000/recommendation/updategame/${gameId}`,
+      updatedGameData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response
+      ? error.response.data
+      : { message: "Game update failed" };
+  }
+};
+
+/** Download registrations details  */
+export const downloadRegistration = async (eventId) => {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:5000/event/event_registrations/${eventId}`
+    );
+    return response.json();
+  } catch (error) {
+    throw error.response
+      ? error.response.data
+      : { message: "Game update failed" };
   }
 };
