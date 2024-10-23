@@ -33,3 +33,6 @@ def add_game(game_name, genre):
         "game": game.game,
         "genre": game.genre
     }
+
+
+
