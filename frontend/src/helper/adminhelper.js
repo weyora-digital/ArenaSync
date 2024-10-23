@@ -6,7 +6,7 @@ axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 export async function adminLogin(credentials) {
   try {
     const response = await axios.post(
-      "http://127.0.0.1:5000/admin/login",
+      "http://127.0.0.1:5002/admin/login",
       credentials
     );
     const { data, status } = response;
@@ -26,7 +26,7 @@ export const createAdminEvent = async (eventData, token) => {
   console.log(eventData);
   try {
     const response = await axios.post(
-      "http://127.0.0.1:5000/event/create",
+      "http://127.0.0.1:5002/event/create",
       eventData,
       {
         headers: {
@@ -48,6 +48,7 @@ export const createAdminEvent = async (eventData, token) => {
 /** Fetch events */
 export const fetchAdminEvents = async () => {
   try {
+
     const response = await axios.get("http://127.0.0.1:5000/event/events");
 
     const sortedEvents = response.data.events.sort(
@@ -55,6 +56,7 @@ export const fetchAdminEvents = async () => {
     );
 
     return sortedEvents;
+
   } catch (error) {
     throw error;
   }
@@ -64,7 +66,7 @@ export const fetchAdminEvents = async () => {
 export const deleteEvent = async (eventId, token) => {
   try {
     const response = await axios.delete(
-      `http://127.0.0.1:5000/event/delete/${eventId}`,
+      `http://127.0.0.1:5002/event/delete/${eventId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -83,7 +85,7 @@ export const deleteEvent = async (eventId, token) => {
 export const updateEvent = async (eventId, updatedEventData, token) => {
   try {
     const response = await axios.put(
-      `http://127.0.0.1:5000/event/update/${eventId}`,
+      `http://127.0.0.1:5002/event/update/${eventId}`,
       updatedEventData,
       {
         headers: {
@@ -104,6 +106,7 @@ export const updateEvent = async (eventId, updatedEventData, token) => {
 export const createAdminGame = async (eventData, token) => {
   try {
     const response = await axios.post(
+
       "http://127.0.0.1:5000/recommendation/addgame",
       eventData,
       {
@@ -111,6 +114,7 @@ export const createAdminGame = async (eventData, token) => {
           Authorization: `Bearer ${token}`,
         },
       }
+
     );
     return response.data;
   } catch (error) {

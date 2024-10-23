@@ -20,7 +20,7 @@ services:
       dockerfile: Dockerfile  # Default name is Dockerfile; you can omit this line
     container_name: arenasync_backend
     ports:
-      - "5001:5000"  # Expose the backend on port 5000 internally, but bind to 5001 on host
+      - "5002:5000"  # Expose the backend on port 5002 internally, but bind to 5002 on host
     environment:
       DATABASE_NAME: arenasync
       POSTGRES_USER: admin

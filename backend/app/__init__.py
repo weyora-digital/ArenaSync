@@ -24,8 +24,15 @@ def create_app():
     config.DATABASE_URL = f'bolt://{neo4j_user}:{neo4j_password}@{neo4j_uri}/{neo4j_database}'
 
 
+    # Get the base directory (the directory where __init__.py is located)
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Build the relative path to the 'event_img' folder
+    event_img_path = os.path.join(base_dir, '..', 'asserts', 'event_img')
     # Set the path to store uploaded files (event images)
-    app.config['UPLOAD_FOLDER'] = 'D:/GitHub/Other Projects/ArenaSync/backend/asserts/event_img'
+    # app.config['UPLOAD_FOLDER'] = 'D:/GitHub/Other Projects/ArenaSync/backend/asserts/event_img'
+    print(event_img_path)
+    app.config['UPLOAD_FOLDER'] = event_img_path
 
     db.init_app(app)
 
