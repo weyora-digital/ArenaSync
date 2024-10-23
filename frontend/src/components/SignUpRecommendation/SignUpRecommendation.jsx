@@ -80,12 +80,12 @@ export default function SignUpRecommendationForm({
       <div className="bg-gray-800 text-primary_text p-8 rounded-lg w-full max-w-lg shadow-lg relative">
         {/* Logo */}
         <div className="flex justify-center mb-6">
-          <img src={logo} alt="InGame Esports Logo" className="w-16" />
+          <img src={logo} alt="ArenaSync Esports Logo" className="w-16" />
         </div>
 
         {/* Form Title */}
         <h2 className="text-center text-2xl mb-6">
-          Welcome to InGame eSports Platform!
+          Welcome to ArenaSync eSports Platform!
         </h2>
         <p className="text-center text-gray-400 mb-8">
           Select Your Favorite Games
