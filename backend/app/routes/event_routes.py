@@ -1,7 +1,7 @@
 import json
 from flask import Blueprint, request, jsonify, send_from_directory
 from ..utils.db import db
-from ..models.sql_models import Event, EventRegistration, Team
+from ..models.sql_models import Event, EventRegistration, Team, Player
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import requests
 from ..decoraters import admin_required, user_required
@@ -304,3 +304,42 @@ def get_events_by_game_names():
         return jsonify({'events': events_data}), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 500
+    
+
+@event_blueprint.route('/event_registrations/<int:event_id>', methods=['GET'])
+def get_event_registrations(event_id):
+    try:
+        # Query the EventRegistration table to get all users registered for the event
+        registrations = db.session.query(EventRegistration).filter_by(EventID=event_id).all()
+
+        # If no registrations found for the event
+        if not registrations:
+            return jsonify({'error': 'No registrations found for the event'}), 404
+
+        # Collect registration details
+        registration_details = []
+        for reg in registrations:
+            # Query the Player table to get the nickname based on user_id
+            player = db.session.query(Player).filter_by(userid=reg.UserID).first()
+
+            # If player exists, append the data
+            if player:
+                registration_details.append({
+                    'user_id': reg.UserID,
+                    'nickname': player.nickname,
+                    'date_of_birth': reg.DateOfBirth,
+                    'gender': reg.Gender,
+                    'phone_number': reg.PhoneNumber
+                })
+
+        # Return the list of registration details as JSON response
+        return jsonify({
+            'event_id': event_id,
+            'registrations': registration_details
+        }), 200
+
+    except Exception as e:
+        # Handle any errors and return a response
+        return jsonify({
+            'error': str(e)
+        }), 500
