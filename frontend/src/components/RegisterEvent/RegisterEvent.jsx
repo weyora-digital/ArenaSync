@@ -71,7 +71,7 @@ export default function RegisterEvent({ onClose, eventid, fetchData }) {
         </button>
 
         <div className="flex justify-center mb-6">
-          <img src={logo} alt="InGame Esports Logo" className="w-16" />
+          <img src={logo} alt="ArenaSync Esports Logo" className="w-16" />
         </div>
         <h2 className="text-2xl text-center mb-6">Register to Tournament</h2>
 

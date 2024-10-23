@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { fetchAdminEvents, deleteEvent } from "../../helper/adminhelper"; // Import helper functions
+import { fetchGames, deleteGame } from "../../helper/adminhelper";
 import TableRenderProp from "../RenderProp/TableRenderProp";
 import toast from "react-hot-toast";
 import { MdOutlineEdit } from "react-icons/md";
@@ -13,6 +13,7 @@ const ManageGames = () => {
   const [editEvent, setEditEvent] = useState(false);
   const [item, setItem] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const resetPage = async () => {
     setCurrentPage(0);
@@ -20,7 +21,8 @@ const ManageGames = () => {
 
   const fetchEvents = async () => {
     try {
-      const events = await fetchAdminEvents();
+      const events = await fetchGames();
+      setLoading(false);
       setEvents(events);
       setTotalElements(events.length);
     } catch (error) {
@@ -34,20 +36,7 @@ const ManageGames = () => {
     setPopUpAddEvent(!popUpAddEvent);
   };
 
-  const tableHeading = [
-    "Events Id",
-    "Game Name",
-    "Country",
-    "Organizer",
-    "Admin Id",
-    "Location",
-    "Start Date",
-    "End Date",
-    "Start Time",
-    "End Time",
-    "Registration Closing Date",
-    "Action",
-  ];
+  const tableHeading = ["Game Id", "Game Name", "Genre", "Action"];
 
   const handleUpdateEvent = (item) => {
     setEditEvent(true);
@@ -55,11 +44,10 @@ const ManageGames = () => {
     setPopUpAddEvent(!popUpAddEvent);
   };
 
-  const handleDeleteEvent = async (eventId) => {
+  const handleDeleteEvent = async (gameId) => {
     const token = localStorage.getItem("admin_token");
-    console.log("clicked");
     try {
-      await deleteEvent(eventId, token);
+      await deleteGame(gameId, token);
       toast.success("Event deleted successfully");
 
       fetchEvents();
@@ -73,19 +61,11 @@ const ManageGames = () => {
     return event.map((item, index) => (
       <div
         key={index}
-        className="grid grid-cols-12 h-16 items-center border-b-2 border-b-secondary_text text-sm"
+        className="grid grid-cols-4 h-16 items-center border-b-2 border-b-secondary_text text-sm"
       >
-        <p className="text-center">{item.eventid}</p>
-        <p className="text-center">{item.gamename}</p>
-        <p className="text-center">{item.country}</p>
-        <p className="text-center">{item.organizer}</p>
-        <p className="text-center">{item.adminid}</p>
-        <p className="text-center">{item.location}</p>
-        <p className="text-center">{item.starting_date}</p>
-        <p className="text-center">{item.end_date}</p>
-        <p className="text-center">{item.starting_time}</p>
-        <p className="text-center">{item.end_time}</p>
-        <p className="text-center">{item.registration_closing}</p>
+        <p className="text-center">{item.gameId}</p>
+        <p className="text-center">{item.gameName}</p>
+        <p className="text-center">{item.genre}</p>
         <div className="justify-center flex gap-5">
           <MdOutlineEdit
             className="text-xl text-[#E1BE43] cursor-pointer"
@@ -93,7 +73,7 @@ const ManageGames = () => {
           />
           <RiDeleteBin6Line
             className="text-xl text-custom_red cursor-pointer"
-            onClick={() => handleDeleteEvent(item.eventid)}
+            onClick={() => handleDeleteEvent(item.gameId)}
           />
         </div>
       </div>
@@ -108,13 +88,13 @@ const ManageGames = () => {
         handleClick={handleClick}
         heading={"Game Details"}
         buttonName={"New Game"}
-        url={"http://127.0.0.1:5000/event/events"}
-        pageType={"Upcoming Challenges"}
+        page={"Manage Games"}
         fetchEvents={fetchEvents}
         events={events}
         totalElements={totalElements}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
+        loading={loading}
       />
       {popUpAddEvent && (
         <AddGame

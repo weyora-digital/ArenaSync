@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast, Toaster } from "react-hot-toast";
-import { createAdminGame, updateEvent } from "../../helper/adminhelper";
-import { fetchCountries, fetchAllGames } from "../../helper/helper";
+import { createAdminGame, updateGame } from "../../helper/adminhelper";
 import { RxCross2 } from "react-icons/rx";
 import ClipLoading from "../ClipLoading/ClipLoading";
 
@@ -24,7 +23,7 @@ const AddGame = ({ onClose, editEvent, item, fetchEvents, resetPage }) => {
   const formik = useFormik({
     initialValues: editEvent
       ? {
-          game: item.game || "",
+          game: item.gameName || "",
           genre: item.genre || "",
         }
       : {
@@ -41,8 +40,8 @@ const AddGame = ({ onClose, editEvent, item, fetchEvents, resetPage }) => {
       setLoading(true);
       if (editEvent) {
         try {
-          await updateEvent(item.eventid, values, token);
-          toast.success("Event updated successfully");
+          await updateGame(item.gameId, values, token);
+          toast.success("Game updated successfully");
           setTimeout(() => {
             fetchEvents();
             toast.dismiss();
@@ -51,7 +50,6 @@ const AddGame = ({ onClose, editEvent, item, fetchEvents, resetPage }) => {
             onClose();
           }, 1000);
         } catch (error) {
-          console.error("Error:", error);
           toast.error("Game Update Failed");
           setTimeout(() => {
             toast.dismiss();
@@ -70,7 +68,6 @@ const AddGame = ({ onClose, editEvent, item, fetchEvents, resetPage }) => {
             onClose();
           }, 1000);
         } catch (error) {
-          console.error("Error:", error);
           toast.error("Game Adding Failed");
           setTimeout(() => {
             toast.dismiss();
@@ -84,7 +81,7 @@ const AddGame = ({ onClose, editEvent, item, fetchEvents, resetPage }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
       <Toaster position="top-center" />
-      <div className="relative flex flex-col bg-background xl:px-12 p-6 pt-16 rounded-lg w-80 xl:w-3/12 overflow-y-auto">
+      <div className="relative flex flex-col bg-background xl:px-12 p-6 pt-16 rounded-lg w-80 xl:w-1/4 overflow-y-auto">
         <div className="absolute top-0 left-0 w-full flex justify-center items-center p-4 bg-custom_white z-10">
           <p className="text-custom_black text-xl sm:text-4xl font-bold">
             {editEvent ? "Update Game" : "Create New Game"}
@@ -139,9 +136,7 @@ const AddGame = ({ onClose, editEvent, item, fetchEvents, resetPage }) => {
                       formik.setFieldValue("genre", e.target.value)
                     }
                     className="custom-radio custom-radio-label"
-                    // checked={formik.values.game_names.includes(
-                    //   game.gameName
-                    // )}
+                    checked={formik.values.genre.includes(game)}
                   />
                   <label
                     htmlFor={`game-${game}`}
