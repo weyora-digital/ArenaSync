@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from ..recommendation.neo4j_connection import get_connection
 from ..utils.neo4j_helper import Neo4jHelper
+from ..models.neo_models import Player, Game
 
 import json
 from ..recommendation import game
@@ -8,6 +9,7 @@ from ..recommendation import filtering
 from ..recommendation import match_make
 from ..recommendation import get_games
 from ..recommendation import player
+from neomodel.exceptions import DoesNotExist
 
 # Define a blueprint for recommendation routes
 recommendation_blueprint = Blueprint('recommendation', __name__)
@@ -93,3 +95,45 @@ def add_relation():
 def get_all_games():
     games = get_games.get_all_games()
     return jsonify(games)
+
+
+@recommendation_blueprint.route('/deletegame/<int:game_id>', methods=['DELETE'])
+def delete_game_route(game_id):
+    try:
+        # Find the game by gameId
+        game = Game.nodes.get(gameId=game_id)
+        game.delete()  # Delete the game node
+        return jsonify({'message': 'Game deleted successfully'}), 200
+    except DoesNotExist:
+        return jsonify({'error': 'Game not found'}), 404
+    
+@recommendation_blueprint.route('/updategame/<int:game_id>', methods=['PUT'])
+def update_game_route(game_id):
+    data = request.get_json()
+
+    game_name = data.get('game')  # Get the new game name from the request
+    genre = data.get('genre')  # Get the new genre from the request
+
+    if not game_name and not genre:
+        return jsonify({'error': 'Missing parameter'}), 400
+
+    try:
+        # Find the game by gameId
+        game = Game.nodes.get(gameId=game_id)
+        
+        # Update only the fields that were provided
+        if game_name:
+            game.game = game_name
+        if genre:
+            game.genre = genre
+
+        game.save()  # Save the changes
+
+        return jsonify({
+            'gameId': game.gameId,
+            'game': game.game,
+            'genre': game.genre,
+            'message': 'Game updated successfully'
+        }), 200
+    except DoesNotExist:
+        return jsonify({'error': 'Game not found'}), 404
