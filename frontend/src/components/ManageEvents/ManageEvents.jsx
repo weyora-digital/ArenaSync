@@ -114,7 +114,7 @@ const ManageEvents = () => {
         handleClick={handleClick}
         heading={"Event Details"}
         buttonName={"New Event"}
-        url={"http://127.0.0.1:5000/event/events"}
+        url={"http://127.0.0.1:5002/event/events"}
         pageType={"Upcoming Challenges"}
         fetchEvents={fetchEvents}
         events={events}

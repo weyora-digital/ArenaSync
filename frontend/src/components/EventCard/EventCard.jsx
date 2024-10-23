@@ -76,7 +76,7 @@ const EventCard = ({ event }) => {
     }
   };
 
-  const imageUrl = `http://127.0.0.1:5000/event/image/${event.eventid}`;
+  const imageUrl = `http://127.0.0.1:5002/event/image/${event.eventid}`;
 
   return (
     <div className="bg-gray-700 w-80 rounded-lg shadow-sm shadow-gray-900 text-primary_text event-card">
