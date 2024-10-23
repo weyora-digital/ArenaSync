@@ -83,7 +83,7 @@ export default function Navbar() {
       <nav className="navbar-bottom flex justify-between items-center py-4 px-4">
         {/* Logo */}
         <div className="w-24">
-          <img src={logo} alt="InGame Esports Logo" className="w-20" />
+          <img src={logo} alt="ArenaSync Esports Logo" className="w-20" />
         </div>
         {/* Navigation Links */}
         <div className="flex space-x-16">

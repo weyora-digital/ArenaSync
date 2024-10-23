@@ -69,9 +69,9 @@ export default function LoginForm({
         </button>
 
         <div className="flex justify-center mb-6">
-          <img src={logo} alt="InGame Esports Logo" className="w-16" />
+          <img src={logo} alt="ArenaSync Esports Logo" className="w-16" />
         </div>
-        <h2 className="text-2xl text-center mb-6">Login to InGame eSports</h2>
+        <h2 className="text-2xl text-center mb-6">Login to ArenaSync eSports</h2>
 
         <form className="space-y-4" onSubmit={formik.handleSubmit}>
           <input
