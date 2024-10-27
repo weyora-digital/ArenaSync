@@ -44,7 +44,10 @@ export default function LoginForm({
         if (challenges) {
           onClose();
           openEventRegistrationModal();
-        } else onClose();
+        } else {
+          onClose();
+          window.location.reload();
+        }
       } catch (error) {
         // Handle error (e.g., show error message)
         toast.error("Login failed. Please check your credentials.");
@@ -71,7 +74,9 @@ export default function LoginForm({
         <div className="flex justify-center mb-6">
           <img src={logo} alt="ArenaSync Esports Logo" className="w-16" />
         </div>
-        <h2 className="text-2xl text-center mb-6">Login to ArenaSync eSports</h2>
+        <h2 className="text-2xl text-center mb-6">
+          Login to ArenaSync eSports
+        </h2>
 
         <form className="space-y-4" onSubmit={formik.handleSubmit}>
           <input
