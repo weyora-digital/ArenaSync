@@ -15,7 +15,7 @@ export async function getUsername() {
 /** authenticate function */
 export async function authenticate(username) {
   try {
-    return await axios.post(`http://127.0.0.1:5000/api/authenticate`, {
+    return await axios.post(`http://127.0.0.1:5002/api/authenticate`, {
       username,
     });
   } catch (error) {
@@ -27,7 +27,7 @@ export async function authenticate(username) {
 export async function getUser({ username }) {
   try {
     const { data } = await axios.get(
-      `http://127.0.0.1:5000/api/user/${username}`
+      `http://127.0.0.1:5002/api/user/${username}`
     );
     return { data };
   } catch (error) {
@@ -40,7 +40,7 @@ export async function registerUser(credentials) {
   try {
     console.log(credentials);
     const response = await axios.post(
-      `http://127.0.0.1:5000/user/signup`,
+      `http://127.0.0.1:5002/user/signup`,
       credentials
     );
 
@@ -50,7 +50,7 @@ export async function registerUser(credentials) {
 
     /** send email */
     // if(status === 201){
-    //     await axios.post(`http://127.0.0.1:5001/api/registerMail`, { username, userEmail : email, text : msg})
+    //     await axios.post(`http://127.0.0.1:5002/api/registerMail`, { username, userEmail : email, text : msg})
     // }
 
     return Promise.resolve(data);
@@ -63,7 +63,7 @@ export async function registerUser(credentials) {
 export async function loginUser(credentials) {
   try {
     const response = await axios.post(
-      `http://127.0.0.1:5000/user/login`,
+      `http://127.0.0.1:5002/user/login`,
       credentials
     );
     return Promise.resolve(response.data);
@@ -76,7 +76,7 @@ export async function loginUser(credentials) {
 export async function verifyPassword({ username, password }) {
   try {
     if (username) {
-      const { data } = await axios.post(`http://127.0.0.1:5000/api/login`, {
+      const { data } = await axios.post(`http://127.0.0.1:5002/api/login`, {
         username,
         password,
       });
@@ -92,7 +92,7 @@ export async function updateUser(response) {
   try {
     const token = await localStorage.getItem("token");
     const data = await axios.put(
-      `http://127.0.0.1:5000/api/updateuser`,
+      `http://127.0.0.1:5002/api/updateuser`,
       response,
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -109,7 +109,7 @@ export async function generateOTP(username) {
     const {
       data: { code },
       status,
-    } = await axios.get(`http://127.0.0.1:5000/api/generateOTP`, {
+    } = await axios.get(`http://127.0.0.1:5002/api/generateOTP`, {
       params: { username },
     });
 
@@ -119,7 +119,7 @@ export async function generateOTP(username) {
         data: { email },
       } = await getUser({ username });
       let text = `Your Password Recovery OTP is ${code}. Verify and recover your password.`;
-      await axios.post(`http://127.0.0.1:5000/api/registerMail`, {
+      await axios.post(`http://127.0.0.1:5002/api/registerMail`, {
         username,
         userEmail: email,
         text,
@@ -136,7 +136,7 @@ export async function generateOTP(username) {
 export async function verifyOTP({ username, code }) {
   try {
     const { data, status } = await axios.get(
-      `http://127.0.0.1:5000/api/verifyOTP`,
+      `http://127.0.0.1:5002/api/verifyOTP`,
       { params: { username, code } }
     );
     return { data, status };
@@ -149,7 +149,7 @@ export async function verifyOTP({ username, code }) {
 export async function resetPassword({ username, password }) {
   try {
     const { data, status } = await axios.put(
-      `http://127.0.0.1:5000/api/resetPassword`,
+      `http://127.0.0.1:5002/api/resetPassword`,
       { username, password }
     );
     return Promise.resolve({ data, status });
@@ -167,7 +167,7 @@ export async function addFavoriteGames(list) {
     const gamesString = games.join(",");
 
     const response = await axios.post(
-      `http://127.0.0.1:5000/recommendation/addrelationship`,
+      `http://127.0.0.1:5002/recommendation/addrelationship`,
       null,
       {
         params: {
@@ -186,7 +186,7 @@ export async function addFavoriteGames(list) {
 /** fetch UpComing Events */
 export async function fetchUpcomingEvents() {
   try {
-    const response = await axios.get("http://127.0.0.1:5000/event/events");
+    const response = await axios.get("http://127.0.0.1:5002/event/events");
     return response.data.events;
   } catch (error) {
     throw error.response
@@ -202,7 +202,7 @@ export async function fetchRecommandedEvents() {
   const player_id = decode.sub;
   try {
     const response = await axios.get(
-      "http://127.0.0.1:5000/recommendation/getRecommendation",
+      "http://127.0.0.1:5002/recommendation/getRecommendation",
       {
         params: {
           player_id: player_id,
@@ -220,7 +220,7 @@ export async function fetchRecommandedEvents() {
     console.log(result);
     try {
       const response = await axios.post(
-        "http://127.0.0.1:5000/event/eventsbygames",
+        "http://127.0.0.1:5002/event/eventsbygames",
         result
       );
       console.log("aecond error", response);
@@ -255,7 +255,7 @@ export async function fetchEvent(url) {
 export async function fetchAllGames() {
   try {
     const response = await axios.get(
-      "http://127.0.0.1:5000/recommendation/getallgames"
+      "http://127.0.0.1:5002/recommendation/getallgames"
     );
     return response;
   } catch (error) {
@@ -309,7 +309,7 @@ export async function fetchCountryFlag(countryName) {
 export async function fetchGameRegistrationCount(eventId) {
   try {
     const response = await axios.get(
-      `http://127.0.0.1:5000/event/registrations/${eventId}`
+      `http://127.0.0.1:5002/event/registrations/${eventId}`
     );
     return response.data.registration_count;
   } catch (error) {
@@ -324,7 +324,7 @@ export async function registerTournament(values) {
   const token = localStorage.getItem("token");
   try {
     const response = await axios.post(
-      `http://127.0.0.1:5000/event/register_event`,
+      `http://127.0.0.1:5002/event/register_event`,
       values,
       {
         headers: {

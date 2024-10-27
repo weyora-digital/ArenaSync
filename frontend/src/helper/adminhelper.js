@@ -6,7 +6,7 @@ axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 export async function adminLogin(credentials) {
   try {
     const response = await axios.post(
-      "http://127.0.0.1:5000/admin/login",
+      "http://127.0.0.1:5002/admin/login",
       credentials
     );
     const { data, status } = response;
@@ -26,7 +26,7 @@ export const createAdminEvent = async (eventData, token) => {
   console.log(eventData);
   try {
     const response = await axios.post(
-      "http://127.0.0.1:5000/event/create",
+      "http://127.0.0.1:5002/event/create",
       eventData,
       {
         headers: {
@@ -48,13 +48,15 @@ export const createAdminEvent = async (eventData, token) => {
 /** Fetch events */
 export const fetchAdminEvents = async () => {
   try {
-    const response = await axios.get("http://127.0.0.1:5000/event/events");
+
+    const response = await axios.get("http://127.0.0.1:5002/event/events");
 
     const sortedEvents = response.data.events.sort(
       (a, b) => a.eventid - b.eventid
     );
 
     return sortedEvents;
+
   } catch (error) {
     throw error;
   }
@@ -64,7 +66,7 @@ export const fetchAdminEvents = async () => {
 export const deleteEvent = async (eventId, token) => {
   try {
     const response = await axios.delete(
-      `http://127.0.0.1:5000/event/delete/${eventId}`,
+      `http://127.0.0.1:5002/event/delete/${eventId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -83,7 +85,7 @@ export const deleteEvent = async (eventId, token) => {
 export const updateEvent = async (eventId, updatedEventData, token) => {
   try {
     const response = await axios.put(
-      `http://127.0.0.1:5000/event/update/${eventId}`,
+      `http://127.0.0.1:5002/event/update/${eventId}`,
       updatedEventData,
       {
         headers: {
@@ -104,13 +106,15 @@ export const updateEvent = async (eventId, updatedEventData, token) => {
 export const createAdminGame = async (eventData, token) => {
   try {
     const response = await axios.post(
-      "http://127.0.0.1:5000/recommendation/addgame",
+
+      "http://127.0.0.1:5002/recommendation/addgame",
       eventData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }
+
     );
     return response.data;
   } catch (error) {
@@ -124,7 +128,7 @@ export const createAdminGame = async (eventData, token) => {
 export const fetchGames = async () => {
   try {
     const response = await axios.get(
-      "http://127.0.0.1:5000/recommendation/getallgames"
+      "http://127.0.0.1:5002/recommendation/getallgames"
     );
     const sortedEvents = response.data.sort((a, b) => a.gameId - b.gameId);
     return sortedEvents;
@@ -137,7 +141,7 @@ export const fetchGames = async () => {
 export const deleteGame = async (gameId, token) => {
   try {
     const response = await axios.delete(
-      `http://127.0.0.1:5000/recommendation/deletegame/${gameId}`,
+      `http://127.0.0.1:5002/recommendation/deletegame/${gameId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -156,7 +160,7 @@ export const deleteGame = async (gameId, token) => {
 export const updateGame = async (gameId, updatedGameData, token) => {
   try {
     const response = await axios.put(
-      `http://127.0.0.1:5000/recommendation/updategame/${gameId}`,
+      `http://127.0.0.1:5002/recommendation/updategame/${gameId}`,
       updatedGameData,
       {
         headers: {
@@ -176,7 +180,7 @@ export const updateGame = async (gameId, updatedGameData, token) => {
 export const downloadRegistration = async (eventId) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:5000/event/event_registrations/${eventId}`
+      `http://127.0.0.1:5002/event/event_registrations/${eventId}`
     );
     return response.json();
   } catch (error) {

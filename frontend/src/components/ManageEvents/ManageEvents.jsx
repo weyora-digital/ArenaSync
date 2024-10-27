@@ -168,7 +168,10 @@ const ManageEvents = () => {
         handleClick={handleClick}
         heading={"Event Details"}
         buttonName={"New Event"}
+
+
         page={"Manage Events"}
+
         fetchEvents={fetchEvents}
         events={events}
         totalElements={totalElements}
