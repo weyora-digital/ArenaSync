@@ -103,5 +103,5 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Contact
 
-For any inquiries or feedback, please contact [your.email@example.com](mailto:tharooshavihidun@gmail.com) or open an issue on GitHub.
+For any inquiries or feedback, please contact [tharooshavihidun@gmail.com](mailto:tharooshavihidun@gmail.com) or open an issue on GitHub.
 
