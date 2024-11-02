@@ -116,6 +116,7 @@ def get_relationship():
         # Get the relationships for the player
         relationships = player.get_player_relationships(player_id)
         
+        
         # Prepare a list to store relationships with game details
         detailed_relationships = []
 
@@ -139,6 +140,54 @@ def get_relationship():
         return jsonify({"error": str(e)}), 500
 
     return jsonify(detailed_relationships), 200
+
+
+
+@recommendation_blueprint.route('/updaterelationship', methods=['PUT'])
+def update_relationship():
+    
+    player_id = request.args.get('player_id', type=int)
+    game_names = request.json.get('game_names')  # Assume frontend sends game names in JSON body
+
+    if not player_id or not game_names:
+        return jsonify({"error": "Missing player ID or game names"}), 400
+
+    try:
+        # Retrieve the current relationships
+        current_relationships = player.get_player_relationships(player_id)
+        current_game_ids = {rel['gameId'] for rel in current_relationships}
+
+        # Convert game names to game IDs (assuming a function exists to do so)
+        new_game_ids = set()
+        for game_name in game_names:
+            game = Game.nodes.get(game=game_name)  # Assuming you have a method to find games by name
+            if game:
+                new_game_ids.add(game.gameId)
+
+        # Identify relationships to keep, add, and remove
+        to_keep = current_game_ids.intersection(new_game_ids)
+        to_add = new_game_ids.difference(current_game_ids)
+        to_remove = current_game_ids.difference(new_game_ids)
+
+        # Add new relationships
+        new_player = Player.nodes.get(playerId=player_id)
+        for game_id in to_add:
+            game = Game.nodes.get(gameId=game_id)
+            new_player.plays.connect(game)
+
+        # Remove relationships
+        for game_id in to_remove:
+            game = Game.nodes.get(gameId=game_id)
+            new_player.plays.disconnect(game)
+
+        return jsonify({
+            "kept_relationships": list(to_keep),
+            "added_relationships": list(to_add),
+            "removed_relationships": list(to_remove)
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @recommendation_blueprint.route('/getallgames')
