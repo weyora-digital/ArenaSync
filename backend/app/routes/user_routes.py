@@ -10,8 +10,6 @@ user_blueprint = Blueprint('user', __name__)
 
 # @user_blueprint.route('/signup', methods=['POST', 'OPTIONS'])
 @user_blueprint.route('/signup', methods=['POST'])
-
-# @cross_origin(origin='*')
 def signup_user():
     data = request.get_json()
     email = data.get('email')
@@ -109,3 +107,71 @@ def validate_user(user_id):
         return jsonify({'message': 'User is valid', 'user_id': user_id}), 200
     else:
         return jsonify({'message': 'User not found'}), 404
+    
+@user_blueprint.route('/user/<int:user_id>', methods=['GET'])
+@jwt_required()
+def get_user_details(user_id):
+    # Retrieve the user from the database
+    user = Player.query.get(user_id)
+    print(user.userid)
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    # Return the user details
+    return jsonify({
+        'user_id': user.userid,
+        'email': user.email,
+        'nickname': user.nickname,
+        # 'country': user.country,
+        # 'teamid': user.teamid
+    }), 200
+
+@user_blueprint.route('/user/<int:user_id>', methods=['PUT'])
+@jwt_required()
+def update_user_details(user_id):
+    # Ensure the user can only update their own information
+    current_user_id = get_jwt_identity()
+    if current_user_id != user_id:
+        return jsonify({'message': 'Unauthorized access'}), 403
+
+    # Get the user from the database
+    user = Player.query.get(user_id)
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    # Get the update data from the request
+    data = request.get_json()
+    nickname = data.get('nickname')
+    email = data.get('email')
+    # country = data.get('country')
+    # team_id = data.get('teamid')
+
+    # Update fields if they are provided in the request
+    if nickname:
+        user.nickname = nickname
+    if email:
+        # Check if the email is already in use by another user
+        existing_user = Player.query.filter_by(email=email).first()
+        if existing_user and existing_user.userid != user_id:
+            return jsonify({'message': 'Email is already in use'}), 409
+        user.email = email
+    # if country:
+    #     user.country = country
+    # if team_id is not None:
+    #     # Validate if the team ID exists
+    #     team = Team.query.get(team_id)
+    #     if not team:
+    #         return jsonify({'message': 'Invalid team ID'}), 404
+    #     user.teamid = team_id
+
+    # Commit the updates to the database
+    db.session.commit()
+
+    # Return the updated user details
+    return jsonify({
+        'user_id': user.userid,
+        'email': user.email,
+        'nickname': user.nickname,
+        # 'country': user.country,
+        # 'teamid': user.teamid
+    }), 200

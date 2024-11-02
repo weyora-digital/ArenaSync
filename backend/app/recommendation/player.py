@@ -34,4 +34,19 @@ def add_player_relationships(player_id, games):
     return relationships
 
 
+def get_player_relationships(player_id):
+    # Find the player node
+    player = Player.nodes.get(playerId=player_id)
+
+    relationships = []
+
+    # Retrieve all games the player has a 'PLAYS' relationship with
+    for game in player.plays:
+        relationships.append({
+            "playerId": player.playerId,
+            "gameId": game.gameId
+        })
+
+    return relationships
+
 

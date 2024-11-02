@@ -91,6 +91,56 @@ def add_relation():
     relationships = player.add_player_relationships( player_id, games)
     return jsonify(relationships), 201
 
+# @recommendation_blueprint.route('/getrelationship', methods=['GET'])
+# def get_relationship():
+#     player_id = request.args.get('player_id', type=int)
+
+#     if not player_id:
+#         return jsonify({"error": "Missing player ID"}), 400
+
+#     try:
+#         relationships = player.get_player_relationships(player_id)
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 500
+
+#     return jsonify(relationships), 200
+
+@recommendation_blueprint.route('/getrelationship', methods=['GET'])
+def get_relationship():
+    player_id = request.args.get('player_id', type=int)
+
+    if not player_id:
+        return jsonify({"error": "Missing player ID"}), 400
+
+    try:
+        # Get the relationships for the player
+        relationships = player.get_player_relationships(player_id)
+        
+        # Prepare a list to store relationships with game details
+        detailed_relationships = []
+
+        # Loop through each relationship to fetch game details
+        for relationship in relationships:
+            game_id = relationship.get("gameId")
+
+            # Fetch the game details (assuming `get_game_details` function exists)
+            game_details = game.get_game_details(game_id)  # You may need to implement this function
+
+            # Combine relationship and game details
+            detailed_relationship = {
+                "gameId": game_id,
+                "playerId": relationship.get("playerId"),
+                "game": game_details.get("game"),
+                "genre": game_details.get("genre")
+            }
+            detailed_relationships.append(detailed_relationship)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    return jsonify(detailed_relationships), 200
+
+
 @recommendation_blueprint.route('/getallgames')
 def get_all_games():
     games = get_games.get_all_games()

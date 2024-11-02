@@ -36,3 +36,14 @@ def add_game(game_name, genre):
 
 
 
+def get_game_details(game_id):
+    # Fetch the game by ID from your database (assuming you have a `Game` model)
+    game = Game.nodes.get(gameId=game_id)
+    if game:
+        return {
+            "gameId": game.gameId,
+            "game": game.game,
+            "genre": game.genre
+        }
+    else:
+        return {"error": "Game not found"}

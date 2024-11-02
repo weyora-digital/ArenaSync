@@ -343,3 +343,32 @@ def get_event_registrations(event_id):
         return jsonify({
             'error': str(e)
         }), 500
+@event_blueprint.route('/user_events', methods=['GET'])
+@user_required
+def get_registered_events():
+    # Get the user ID from the JWT token
+    user_id = get_jwt_identity()
+    
+    try:
+        # Query the database for events registered by this user
+        registrations = EventRegistration.query.filter_by(UserID=user_id).all()
+
+        # Format the response
+        registered_events = [
+            {
+                'registration_id': reg.RegistrationID,
+                'event_id': reg.EventID,
+                'country': reg.Country,
+                'phone_number': reg.PhoneNumber,
+                'date_of_birth': reg.DateOfBirth,
+                'gender': reg.Gender,
+                'registered_date': reg.RegisteredDate,
+                # 'team_id': reg.teamid
+            }
+            for reg in registrations
+        ]
+
+        return jsonify(registered_events), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
