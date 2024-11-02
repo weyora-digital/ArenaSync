@@ -57,3 +57,6 @@ class EventRegistration(db.Model):
     PhoneNumber = db.Column(db.String(20), nullable=True)
     DateOfBirth = db.Column(db.Date, nullable=True)
     Gender = db.Column(db.String(10), nullable=True)
+
+    UniversityID = db.Column(db.String(50), nullable=True)  
+    BatchID = db.Column(db.String(50), nullable=True)       

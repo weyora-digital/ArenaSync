@@ -99,6 +99,8 @@ def register_event():
         phone_number = data.get('phone_number')
         date_of_birth = data.get('date_of_birth')
         gender = data.get('gender')
+        batch_id = data.get('batch_id')
+        university_id = data.get('university_id')
 
         # Get admin ID from JWT token
         user_id = get_jwt_identity()
@@ -113,7 +115,9 @@ def register_event():
             Country=country,
             PhoneNumber=phone_number,
             DateOfBirth=date_of_birth,
-            Gender=gender
+            Gender=gender,
+            BatchID=batch_id,
+            UniversityID=university_id
         )
 
         if team_name is not None:
@@ -329,7 +333,9 @@ def get_event_registrations(event_id):
                     'nickname': player.nickname,
                     'date_of_birth': reg.DateOfBirth,
                     'gender': reg.Gender,
-                    'phone_number': reg.PhoneNumber
+                    'phone_number': reg.PhoneNumber,
+                    'batch_id': reg.BatchID,
+                    'university_id': reg.UniversityID
                 })
 
         # Return the list of registration details as JSON response
@@ -343,6 +349,7 @@ def get_event_registrations(event_id):
         return jsonify({
             'error': str(e)
         }), 500
+    
 @event_blueprint.route('/user_events', methods=['GET'])
 @user_required
 def get_registered_events():
@@ -354,21 +361,100 @@ def get_registered_events():
         registrations = EventRegistration.query.filter_by(UserID=user_id).all()
 
         # Format the response
-        registered_events = [
-            {
-                'registration_id': reg.RegistrationID,
-                'event_id': reg.EventID,
-                'country': reg.Country,
-                'phone_number': reg.PhoneNumber,
-                'date_of_birth': reg.DateOfBirth,
-                'gender': reg.Gender,
-                'registered_date': reg.RegisteredDate,
-                # 'team_id': reg.teamid
-            }
-            for reg in registrations
-        ]
+        registered_events = []
+        for reg in registrations:
+            try:
+                # Query the database for the event by event ID for each registration
+                event = Event.query.filter_by(eventid=reg.EventID).first()
+
+                # Check if the event exists
+                if event is None:
+                    continue  # Skip this registration if the event doesn't exist
+
+                # Append the formatted registration data to the list
+                registered_events.append({
+                    'registration_id': reg.RegistrationID,
+                    'event_id': reg.EventID,
+                    'gamename': event.gamename,
+                    'country': reg.Country,
+                    'phone_number': reg.PhoneNumber,
+                    'date_of_birth': reg.DateOfBirth,
+                    'gender': reg.Gender,
+                    'registered_date': reg.RegisteredDate,
+                    'batch_id': reg.BatchID,
+                    'university_id': reg.UniversityID
+                    # 'team_id': reg.teamid
+                })
+
+            except Exception as e:
+                return jsonify({"error": f"Error processing event ID {reg.EventID}: {str(e)}"}), 500
 
         return jsonify(registered_events), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@event_blueprint.route('/update_user_event/<int:registration_id>', methods=['PUT'])
+@user_required
+def update_event_registration(registration_id):
+    # Get the user ID from the JWT token
+    user_id = get_jwt_identity()
+
+    try:
+        # Query the registration to update
+        registration = EventRegistration.query.filter_by(RegistrationID=registration_id, UserID=user_id).first()
+
+        # Check if the registration exists
+        if registration is None:
+            return jsonify({"message": "Registration not found"}), 404
+
+        # Get the request data
+        data = request.get_json()
+
+        # Update fields as provided in the request
+        if 'country' in data:
+            registration.Country = data['country']
+        if 'phone_number' in data:
+            registration.PhoneNumber = data['phone_number']
+        if 'date_of_birth' in data:
+            registration.DateOfBirth = data['date_of_birth']
+        if 'gender' in data:
+            registration.Gender = data['gender']
+        if 'university_id' in data:
+            registration.UniversityID = data['university_id']
+        if 'batch_id' in data:
+            registration.BatchID = data['batch_id']
+
+        # Commit the changes to the database
+        db.session.commit()
+
+        return jsonify({"message": "Registration updated successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@event_blueprint.route('/delete_user_event/<int:registration_id>', methods=['DELETE'])
+@user_required
+def delete_event_registration(registration_id):
+    # Get the user ID from the JWT token
+    user_id = get_jwt_identity()
+
+    try:
+        # Query the registration to delete
+        registration = EventRegistration.query.filter_by(RegistrationID=registration_id, UserID=user_id).first()
+
+        # Check if the registration exists
+        if registration is None:
+            return jsonify({"message": "Registration not found"}), 404
+
+        # Delete the registration
+        db.session.delete(registration)
+        db.session.commit()
+
+        return jsonify({"message": "Registration deleted successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
