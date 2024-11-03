@@ -12,6 +12,27 @@ import {
 export default function RegisterEvent({ onClose, eventid, fetchData, item }) {
   const [countryList, setCountryList] = useState([]);
 
+  const initialValues =
+    item == null
+      ? {
+          event_id: eventid,
+          country: "",
+          phone_number: "",
+          date_of_birth: "",
+          gender: "",
+          university_id: "",
+          batch_id: "",
+        }
+      : {
+          event_id: item.event_id || eventid,
+          country: item.country || "",
+          phone_number: item.phone_number || "",
+          date_of_birth: formatDate(item.date_of_birth) || "",
+          gender: item.gender || "",
+          university_id: item.university_id || "",
+          batch_id: item.batch_id || "",
+        };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -31,15 +52,7 @@ export default function RegisterEvent({ onClose, eventid, fetchData, item }) {
   };
 
   const formik = useFormik({
-    initialValues: {
-      event_id: item.event_id || eventid,
-      country: item.country || "",
-      phone_number: item.phone_number || "",
-      date_of_birth: formatDate(item.date_of_birth) || "",
-      gender: item.gender || "",
-      university_id: item.university_id || "",
-      batch_id: item.batch_id || "",
-    },
+    initialValues: initialValues,
     validationSchema: Yup.object({
       country: Yup.string().required("Country is required"),
       phone_number: Yup.string().required("Phone Number is required"),
