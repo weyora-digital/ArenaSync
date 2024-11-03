@@ -61,7 +61,6 @@ const AddEvent = ({ onClose, editEvent, item, fetchEvents, resetPage }) => {
     validateOnBlur: false,
     onSubmit: async (values, { setSubmitting }) => {
       setLoading(true);
-      console.log(values.game_names);
       const formData = new FormData();
       formData.append("gamename", values.gamename);
       formData.append("country", values.country);
@@ -74,7 +73,6 @@ const AddEvent = ({ onClose, editEvent, item, fetchEvents, resetPage }) => {
       formData.append("registrationClosing", values.registrationClosing);
       formData.append("game_names", JSON.stringify(values.game_names));
       formData.append("file", values.file);
-      console.log(values.file);
       if (editEvent) {
         try {
           await updateEvent(item.eventid, formData, token);

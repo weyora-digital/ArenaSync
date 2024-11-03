@@ -20,8 +20,7 @@ export default function Navbar() {
   const [isLoginModalOpen, setIsLoginModelOpen] = useState(false);
   const [isSignUpRecommendationModalOpen, setIsSignUpRecommendationOpen] =
     useState(false);
-  const [userId, setUserId] = useState(0);
-  const { auth, logout } = useAuthStore(); // Access Zustand store
+  const { auth, logout } = useAuthStore();
 
   const openSignupModal = () => setIsSignupModelOpen(true);
   const closeSignupModal = () => setIsSignupModelOpen(false);
@@ -140,7 +139,6 @@ export default function Navbar() {
           openLoginModal={openLoginModal}
           registrationForm={true}
           openSignUpRecommendationModel={openSignUpRecommendationModel}
-          setUserId={setUserId}
         />
         {/* Pass openLoginModal */}
         {/* Login Modal */}
@@ -150,10 +148,7 @@ export default function Navbar() {
           openSignupModal={openSignupModal}
         />
         {isSignUpRecommendationModalOpen && (
-          <SignUpRecommendationForm
-            onClose={closeSignUpRecommendationModel}
-            userId={userId}
-          />
+          <SignUpRecommendationForm onClose={closeSignUpRecommendationModel} />
         )}
         {/* Pass openSignupModal */}
       </nav>

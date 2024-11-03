@@ -34,7 +34,6 @@ const RecommandedChallenges = () => {
           setEvents(fetchedEvents);
         }
       } catch (error) {
-        console.log(error);
         toast.error("Failed to fetch data");
       }
     };

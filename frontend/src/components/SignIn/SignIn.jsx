@@ -19,6 +19,7 @@ export default function LoginForm({
   // Zustand store functions
   const setUsername = useAuthStore((state) => state.setUsername);
   const setToken = useAuthStore((state) => state.setToken);
+  const setUserId = useAuthStore((state) => state.setUserId);
 
   // Formik configuration
   const formik = useFormik({
@@ -31,14 +32,12 @@ export default function LoginForm({
         const response = await loginUser(values);
 
         // Assuming the API returns the token and username upon successful login
-        const { access_token, username } = response;
+        const { access_token, username, user_id } = response;
 
         // Store token and username in Zustand store
         setToken(access_token);
         setUsername(username);
-
-        // Store token in localStorage for persistence
-        localStorage.setItem("token", access_token);
+        setUserId(user_id);
 
         // close signin popup
         if (challenges) {
@@ -49,7 +48,6 @@ export default function LoginForm({
           window.location.reload();
         }
       } catch (error) {
-        // Handle error (e.g., show error message)
         toast.error("Login failed. Please check your credentials.");
       }
     },

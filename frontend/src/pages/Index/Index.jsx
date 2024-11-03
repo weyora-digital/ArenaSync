@@ -8,7 +8,7 @@ import RecommandedChallenges from "../../components/RecommendedChallenges/Recomm
 
 function Index() {
   return (
-    <div>
+    <div className="overflow-x-hidden">
       <Navbar />
       <HeaderSlider />
       <TopGames />

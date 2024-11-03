@@ -39,7 +39,6 @@ const UpcomingChallenges = () => {
             fetchUpcomingEvents(),
             fetchGames(),
           ]);
-        console.log(fetchGamesList);
         setCountryList(fetchedCountries);
         setEvents(fetchedEvents);
         setGames(fetchGamesList);

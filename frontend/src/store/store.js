@@ -18,9 +18,16 @@ export const useAuthStore = create((set) => ({
         auth: { ...state.auth, token: token }
       };
   }),
+  setUserId: (userId) => set((state) => {
+    localStorage.setItem('user_id', userId); // Store userId
+    return {
+      auth: { ...state.auth, userId: userId }
+    };
+}),
   logout: () => set((state) => {
       localStorage.removeItem('token'); // Remove token from localStorage
       localStorage.removeItem('username'); // Remove username from localStorage
+      localStorage.removeItem('user_id'); // Remove userId from localStorage
       return {
         auth: { username: '', active: false, token: null }
       };
