@@ -56,11 +56,9 @@ const ManageUsers = () => {
 
   const handleDeleteEvent = async (eventId) => {
     const token = localStorage.getItem("admin_token");
-    console.log("clicked");
     try {
       await deleteEvent(eventId, token);
       toast.success("Event deleted successfully");
-
       fetchEvents();
     } catch (error) {
       console.error("Error deleting event:", error);

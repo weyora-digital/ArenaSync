@@ -12,12 +12,12 @@ export default function SignUpRecommendationForm({
   onClose,
   challenges,
   openEventRegistrationModal,
-  userId,
 }) {
   const [file, setFile] = useState();
   const [gameList, setGameList] = useState();
   const [loading, setLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
+  const userId = localStorage.getItem("user_id");
 
   useEffect(() => {
     const fetchList = async () => {
@@ -53,7 +53,6 @@ export default function SignUpRecommendationForm({
           openEventRegistrationModal();
         } else onClose();
       } catch (error) {
-        console.log(error);
         toast.error("Registration failed. Please try again.");
       }
     },

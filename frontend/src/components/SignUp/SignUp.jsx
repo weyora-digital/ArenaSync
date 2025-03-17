@@ -17,13 +17,13 @@ export default function SignupForm({
   onClose,
   openLoginModal,
   openSignUpRecommendationModel,
-  setUserId,
 }) {
   const [file, setFile] = useState();
   const [loading, setLoading] = useState(false);
 
   const setUsername = useAuthStore((state) => state.setUsername); // Access Zustand state
   const setToken = useAuthStore((state) => state.setToken); // Access Zustand state
+  const setUserId = useAuthStore((state) => state.userId);
 
   // Formik should always be called, regardless of the modal state
   const formik = useFormik({
@@ -47,12 +47,8 @@ export default function SignupForm({
         // Store token and username in Zustand store
         setToken(access_token);
         setUsername(username);
-
-        // Store token in localStorage for persistence
-        localStorage.setItem("token", access_token);
-        localStorage.setItem("username", username);
-
         setUserId(user_id);
+
         setLoading(false);
         onClose();
         openSignUpRecommendationModel();

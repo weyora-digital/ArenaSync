@@ -23,7 +23,6 @@ export async function adminLogin(credentials) {
 
 /** Create a new event */
 export const createAdminEvent = async (eventData, token) => {
-  console.log(eventData);
   try {
     const response = await axios.post(
       "http://127.0.0.1:5002/event/create",
@@ -35,10 +34,8 @@ export const createAdminEvent = async (eventData, token) => {
         },
       }
     );
-    console.log(response);
     return response.data;
   } catch (error) {
-    console.log(error);
     throw error.response
       ? error.response.data
       : { message: "Event creation failed" };
@@ -48,7 +45,6 @@ export const createAdminEvent = async (eventData, token) => {
 /** Fetch events */
 export const fetchAdminEvents = async () => {
   try {
-
     const response = await axios.get("http://127.0.0.1:5002/event/events");
 
     const sortedEvents = response.data.events.sort(
@@ -56,7 +52,6 @@ export const fetchAdminEvents = async () => {
     );
 
     return sortedEvents;
-
   } catch (error) {
     throw error;
   }
@@ -95,7 +90,6 @@ export const updateEvent = async (eventId, updatedEventData, token) => {
     );
     return response.data;
   } catch (error) {
-    console.log("error : ", error);
     throw error.response
       ? error.response.data
       : { message: "Event update failed" };
@@ -106,7 +100,6 @@ export const updateEvent = async (eventId, updatedEventData, token) => {
 export const createAdminGame = async (eventData, token) => {
   try {
     const response = await axios.post(
-
       "http://127.0.0.1:5002/recommendation/addgame",
       eventData,
       {
@@ -114,7 +107,6 @@ export const createAdminGame = async (eventData, token) => {
           Authorization: `Bearer ${token}`,
         },
       }
-
     );
     return response.data;
   } catch (error) {

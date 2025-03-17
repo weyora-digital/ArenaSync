@@ -38,7 +38,6 @@ export async function getUser({ username }) {
 /** register user function */
 export async function registerUser(credentials) {
   try {
-    console.log(credentials);
     const response = await axios.post(
       `http://127.0.0.1:5002/user/signup`,
       credentials
@@ -158,10 +157,48 @@ export async function resetPassword({ username, password }) {
   }
 }
 
+/** fetch user details */
+export async function getUserDetails() {
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("user_id");
+  try {
+    const { data } = await axios.get(
+      `http://127.0.0.1:5002/user/user/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return Promise.resolve({ data });
+  } catch (error) {
+    return Promise.reject({ error });
+  }
+}
+
+/** update user details */
+export async function updateUserDetails(values) {
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("user_id");
+  try {
+    const { data } = await axios.put(
+      `http://127.0.0.1:5002/user/user/${userId}`,
+      values,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return Promise.resolve({ data });
+  } catch (error) {
+    return Promise.reject({ error });
+  }
+}
+
 /** add favorite games */
 export async function addFavoriteGames(list) {
   const { player_id, games } = list;
-  console.log(games);
   try {
     // Convert games array to a comma-separated string
     const gamesString = games.join(",");
@@ -178,7 +215,6 @@ export async function addFavoriteGames(list) {
     );
     return Promise.resolve({ response });
   } catch (error) {
-    console.log(error);
     return Promise.reject({ error });
   }
 }
@@ -217,22 +253,18 @@ export async function fetchRecommandedEvents() {
     const result = {
       game_names: gameNames,
     };
-    console.log(result);
     try {
       const response = await axios.post(
         "http://127.0.0.1:5002/event/eventsbygames",
         result
       );
-      console.log("aecond error", response);
       return response.data.events;
     } catch (error) {
-      console.log(error);
       throw error.response
         ? error.response.data
         : { message: "Failed to fetch events" };
     }
   } catch (error) {
-    console.log("first error", error);
     throw error.response
       ? error.response.data
       : { message: "Failed to fetch events" };
@@ -337,5 +369,102 @@ export async function registerTournament(values) {
     throw error.response
       ? error.response.data
       : { message: "Failed to fetch country flag" };
+  }
+}
+
+/** get registered events */
+export async function getRegisteredEvents() {
+  const token = localStorage.getItem("token");
+  try {
+    const response = await axios.get(
+      `http://127.0.0.1:5002/event/user_events`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const sortedEvents = response.data.sort(
+      (a, b) => a.registration_id - b.registration_id
+    );
+    return Promise.resolve(sortedEvents);
+  } catch (error) {
+    return Promise.reject({ error });
+  }
+}
+
+/** update registered event */
+export async function updateRegisteredEvent(values, registration_id) {
+  const token = localStorage.getItem("token");
+  try {
+    const response = await axios.put(
+      `http://127.0.0.1:5002/event/update_user_event/${registration_id}`,
+      values,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return Promise.resolve(response.status);
+  } catch (error) {
+    console.log(error);
+    throw error.response
+      ? error.response.data
+      : { message: "Failed to update" };
+  }
+}
+
+/** Delete registered event */
+export async function deleteRegisteredEvent(registration_id) {
+  const token = localStorage.getItem("token");
+  try {
+    const response = await axios.delete(
+      `http://127.0.0.1:5002/event/delete_user_event/${registration_id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return Promise.resolve(response.status);
+  } catch (error) {
+    console.log(error);
+    throw error.response
+      ? error.response.data
+      : { message: "Failed to update" };
+  }
+}
+
+/** get selected game list */
+export async function getFavGames() {
+  const userId = localStorage.getItem("user_id");
+  try {
+    const response = await axios.get(
+      `http://127.0.0.1:5002/recommendation/getrelationship?player_id=${userId}`
+    );
+    return Promise.resolve(response);
+  } catch (error) {
+    console.log(error);
+    throw error.response
+      ? error.response.data
+      : { message: "Failed to update" };
+  }
+}
+
+/** update selected game list */
+export async function updateFavGames(values) {
+  const userId = localStorage.getItem("user_id");
+  try {
+    const response = await axios.put(
+      `http://127.0.0.1:5002/recommendation/updaterelationship?player_id=${userId}`,
+      values
+    );
+    return Promise.resolve(response);
+  } catch (error) {
+    console.log(error);
+    throw error.response
+      ? error.response.data
+      : { message: "Failed to update" };
   }
 }
